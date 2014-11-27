@@ -1,0 +1,20 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+flask=0.10.1=py34_1
+ipython=2.3.1=py34_0
+itsdangerous=0.24=py34_0
+jinja2=2.7.3=py34_1
+markupsafe=0.23=py34_0
+openssl=1.0.1h=1
+pip=1.5.6=py34_0
+python=3.4.2=0
+readline=6.2=2
+setuptools=7.0=py34_0
+sqlalchemy=0.9.8=py34_0
+sqlite=3.8.4.1=0
+system=5.8=1
+tk=8.5.15=0
+werkzeug=0.9.6=py34_1
+xz=5.0.5=0
+zlib=1.2.7=0

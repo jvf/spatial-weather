@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>WeatherMap</title>
+
+
+    <!-- TODO: use static and local libs -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename="style.css") }}">
+    <script src="{{ url_for('static', filename="weather.js") }}"></script>
+
+<script>
+
+$(document).ready(function() {
+
+var map = L.map('map').setView([52.517, 13.383], 13);
+
+// create an OpenStreetMap tile layer
+var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+});
+
+//add a control to switch the layers on and off
+var baseLayers = {
+    "OSM": osmLayer,
+};
+
+var overlays = {
+//    "Hillshading": hillshadeLayer,
+//    "GPX": gpxLayer,
+};
+
+var layers = L.control.layers(baseLayers, overlays).addTo(map)
+
+
+// Try to get some shit
+$.getJSON("/geo.json", function(data) {
+    console.log("geo geladen");
+
+    //polyLayer = L.polygon(data.coordinates)
+    //console.log(polyLayer.toGeoJSON());
+
+    var geoJsonLayer = L.geoJson(data)
+    //geoJsonLayer.addTo(map);
+
+    layers.addOverlay(geoJsonLayer, "geo");
+
+});
+
+// End ready()
+});
+</script>
+
+</head>
+<body>
+
+<div id="map"></div>
+
+
+</body>
+</html>
