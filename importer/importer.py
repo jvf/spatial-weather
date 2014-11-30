@@ -18,15 +18,12 @@ db_name = 'spatial'  # assumes an existing db 'spatial' with postgis extension
 
 # assumes mapping file in /vagrant/mapping.json
 mapping = os.path.abspath('importer' + os.path.sep + 'mapping.json')
-print(mapping)
 
 # assumes pbf file in /vagrant/data/
 pbf = os.path.abspath('data' + os.path.sep + 'germany-latest.osm.pbf')
-print(pbf)
 
 # assumes imposm3 in importer/
 imposm_dir = os.path.abspath('importer')
-print(imposm_dir)
 
 # Database connection
 engine = create_engine('postgresql://' + db_user + ':' + db_pw + '@' + db_host + ':' + str(db_port) + '/' + db_name,
