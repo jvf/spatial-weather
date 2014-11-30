@@ -40,18 +40,24 @@ def run():
     import_from_pbf()
 
     # osm_admin -> country
-    import_from_osm_admin(Country, 2)
+    create_from_admin(Country, 2)
 
     # osm_admin -> state
-    import_from_osm_admin(State, 4)
+    create_from_admin(State, 4)
 
     # osm_admin -> district
-    import_from_osm_admin(District, 6)
+    create_from_admin(District, 6)
 
     # osm_places -> cities
-    import_from_osm_places()
+    create_cities()
 
     session.commit()
+
+    # drop the imposm tables
+    Osm_Admin.__table__.drop(engine, checkfirst=True)
+    Osm_Places.__table__.drop(engine, checkfirst=True)
+
+
     session.close()
 
 
@@ -71,7 +77,7 @@ def import_from_pbf():
         exit(1)
 
 
-def import_from_osm_admin(model, admin_level):
+def create_from_admin(model, admin_level):
     query = session.query(Osm_Admin).filter(Osm_Admin.admin_level == admin_level).all()
     model.__table__.drop(engine, checkfirst=True)
     model.__table__.create(engine)
@@ -81,7 +87,7 @@ def import_from_osm_admin(model, admin_level):
         session.add(newEntity)
 
 
-def import_from_osm_places():
+def create_cities():
     query = session.query(Osm_Places).all()
     Cities.__table__.drop(engine, checkfirst=True)
     Cities.__table__.create(engine)
