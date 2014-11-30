@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# adapter for imposm3, when using the imposm3 installed in the vagrant provisioned vm
-vagrant ssh -c "./imposm3/imposm3 $1"
-
-

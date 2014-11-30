@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# adapter for imposm3, when using the imposm3 installed in the vagrant provisioned vm
+
+
+# replace some data from the command passed though by the python importer
+
+# replace the port to 5432, because imposm is executed inside the vm
+args=$(sed 's/\(-connection postgis:\/\/.*:.*@.*:\)[0-9]*\//\15432\//g' <<< $1)
+
+# change the path to the mapping file to /vagrant/import/mapping.json
+args1=$(sed 's/-mapping \/.*importer/-mapping \/vagrant\/importer/g' <<< $args)
+
+# change the path to the data file to /vagrant/data/...
+args2=$(sed 's/-read \/.*data/-read \/vagrant\/data/g' <<< $args1)
+
+vagrant ssh -c "./imposm3/imposm3 $args2"
+
+
