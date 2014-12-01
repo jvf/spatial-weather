@@ -16,7 +16,8 @@ Vagrant::Config.run do |config|
 
   config.vm.share_folder "bootstrap", "/mnt/bootstrap", ".", :create => true
   config.vm.provision :shell, :path => "Vagrant-setup/bootstrap.sh"
-  
+  config.vm.provision :shell, :path => "Vagrant-setup/imposm.sh"
+
   # PostgreSQL Server port forwarding
   config.vm.forward_port 5432, 15432
 end
