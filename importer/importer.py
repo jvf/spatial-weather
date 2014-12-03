@@ -86,6 +86,15 @@ def create_from_admin(model, admin_level):
                           geometry=func.ST_Transform(row.geometry, 4326))
         session.add(newEntity)
 
+    # for Berlin and Hamburg, add Stadtteile as districts
+    if model is District:
+        berlin = session.query(Osm_Admin).filter_by(admin_level=4, name='Berlin').first()
+        hamburg = session.query(Osm_Admin).filter_by(admin_level=4, name='Hamburg').first()
+        result = session.query(Osm_Admin).filter_by(admin_level=9).filter(berlin.geometry.ST_Union(hamburg.geometry).ST_Intersects(Osm_Admin.geometry)).all()
+        for row in result:
+            session.add(District(name=row.name, osm_id=row.osm_id, type=row.type, admin_level=row.admin_level,
+                                 geometry=row.geometry.ST_Transform(4326)))
+
 
 def create_cities():
     query = session.query(Osm_Places).all()
