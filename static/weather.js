@@ -1,56 +1,52 @@
 $(document).ready(function() {
 
-var map = L.map('map').setView([52.517, 13.383], 13);
+    // Create an OpenStreetMap layer
+    var osmLayer= L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    });
 
-// create an OpenStreetMap tile layer
-var osmLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-});
+    // Create a mapbox layer
+    var mapboxLayer = L.tileLayer('http://api.tiles.mapbox.com/v4/kleingeist.kd8hkfea/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoia2xlaW5nZWlzdCIsImEiOiJINUdqcW1BIn0.BpqqE0r65J8JUlmWtHV2Ug', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18
+    });
 
-//add a control to switch the layers on and off
-var baseLayers = {
-    "OSM": osmLayer,
-};
+    // Initialize the map centered at germany
+    var map = L.map('map', {
+        center: [51.179, 9.811],
+        zoom: 6 ,
+        layers: [mapboxLayer]
+    });
 
-var overlays = {
-//    "Hillshading": hillshadeLayer,
-//    "GPX": gpxLayer,
-};
+    // Export the map to the global scope for debugging
+    window.map = map;
 
-var layers = L.control.layers(baseLayers, overlays).addTo(map)
+    // Geojson overlays
+    var stationsLayer = L.geoJson.ajax("stations.json",{
+        //style: {
+        //    color: "black",
+        //    fillColor: "yellow"
+        //
+        //},
+        //
+        //onEachFeature: function (feature, layer) {
+        //},
+        //
+        //middleware:function(data) {
+        //    return data;
+        //}
+    });
 
-
-// Try to get some shit
-$.getJSON("/geo.json", function(data) {
-    console.log("geo geladen");
-
-    //polyLayer = L.polygon(data.coordinates)
-    //console.log(polyLayer.toGeoJSON());
-
-    var geoJsonLayer = L.geoJson(data)
-    //geoJsonLayer.addTo(map);
-
-    layers.addOverlay(geoJsonLayer, "geo");
-
-});
-
-// Click Handler Test
-map.on("click", function(me) {
-    console.log(me.latlng);
-
-    // Try to get some point
-    $.getJSON("/district.json",
-        {lon:  me.latlng.lng, lat: me.latlng.lat},
-        function(data) {
-            console.log("geo geladen");
-
-            var pt = L.geoJson(data)
-            console.log(pt)
-            pt.addTo(map)
-    }).error(function() { console.log("json error")});
+    // Add a control to change between layers
+    var baseLayers = {
+        "OSM": osmLayer,
+        "Mapbox": mapboxLayer
+    };
+    // and toggle overlays
+    var overlays = {
+        "Wetterstationen": stationsLayer,
+    };
+    L.control.layers(baseLayers, overlays).addTo(map);
 
 
-});
-
-// End ready()
-});
+}); // End ready()
