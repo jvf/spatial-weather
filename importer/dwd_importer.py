@@ -13,7 +13,7 @@ from scipy.spatial import Voronoi
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
-from server import app
+from webapp import app
 """
 
 Importer for DWD observations (adapted from https://github.com/cholin/spatial/tree/master/scripts)

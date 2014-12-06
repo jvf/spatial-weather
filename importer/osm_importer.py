@@ -37,7 +37,7 @@ session = Session()
 
 def run():
     # import from pbf file with imposm
-    import_from_pbf()
+    # import_from_pbf()
 
     # osm_admin -> country
     create_from_admin(Country, 2)
@@ -56,7 +56,6 @@ def run():
     # drop the imposm tables
     Osm_Admin.__table__.drop(engine, checkfirst=True)
     Osm_Places.__table__.drop(engine, checkfirst=True)
-
 
     session.close()
 

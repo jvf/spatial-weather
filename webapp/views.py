@@ -1,13 +1,14 @@
+from webapp import app
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models.map import Country, District, Station
-from flask import Flask, render_template, request, abort, json
+from flask import render_template, request, abort, json
+
 
 engine = create_engine('postgresql://myapp:dbpass@localhost:15432/spatial', echo=True)
 Session = sessionmaker(bind=engine)
-app = Flask(__name__)
-app.config.from_pyfile('config.py')
 session = Session()
+
 
 @app.route('/district.json')
 def get_district():
@@ -23,6 +24,7 @@ def get_district():
 
     return geojson
 
+
 @app.route('/stations.json')
 def get_stations():
     stations = session.query(Station.region.ST_AsGeoJSON()).all()
@@ -34,7 +36,3 @@ def get_stations():
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
