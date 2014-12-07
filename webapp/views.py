@@ -27,7 +27,7 @@ def get_district():
 
 @app.route('/stations.json')
 def get_stations():
-    stations = session.query(Station.region.ST_AsGeoJSON()).all()
+    stations = session.query(Station.region.ST_AsGeoJSON()).filter(Station.region != None).all()
     stations = [json.loads(station[0]) for station in stations]
 
     return json.jsonify(features=stations)
