@@ -39,7 +39,7 @@ class Country(db.Model):
     geometry = Column(Geometry(geometry_type='GEOMETRY', srid=4326))
 
 
-class State(Base):
+class State(db.Model):
     __tablename__ = 'state'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
