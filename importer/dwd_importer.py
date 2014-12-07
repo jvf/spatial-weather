@@ -10,10 +10,8 @@ from io import BytesIO, TextIOWrapper
 from datetime import datetime
 from shapely.geometry import Point, Polygon, MultiPolygon
 from scipy.spatial import Voronoi
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from geoalchemy2 import WKTElement
-from webapp import app
+from webapp import db
 """
 
 Importer for DWD observations (adapted from https://github.com/cholin/spatial/tree/master/scripts)
@@ -42,6 +40,11 @@ intersection with this polygon and use the result as final region
 (Multi)Polygon.
 
 """
+
+DEFAULT_HOST = 'ftp.dwd.de'
+DEFAULT_PATH = 'pub/CDC/observations_germany/climate/daily/kl/recent/'
+DEFAULT_FILE_NAME = 'weather.json'
+
 class DWD_Importer:
 
     def __init__(self, host, path):
@@ -234,31 +237,15 @@ def ftp_get_file(ftp, path):
     return memfile
 
 
-DEFAULT_HOST = 'ftp.dwd.de'
-DEFAULT_PATH = 'pub/CDC/observations_germany/climate/daily/kl/recent/'
-DEFAULT_FILE_NAME = 'weather.json'
-
-
-# Database connection
-engine = create_engine(
-    'postgresql://' + app.config['DB_USER'] + ':' + app.config['DB_PW'] + '@' + app.config['DB_HOST'] +
-    ':' + str(app.config['DB_PORT']) + '/' + app.config['DB_NAME'],
-    echo=True)
-
-# Setup session
-Session = sessionmaker(bind=engine)
-session = Session()
-
-
 def import_dwd_db(host=DEFAULT_HOST, path=DEFAULT_PATH, limit=None):
     from models.map import Station, Observation
-    session.query(Observation).delete()
-    session.query(Station).delete()
-    session.commit()
-    Observation.__table__.drop(engine, checkfirst=True)
-    Station.__table__.drop(engine, checkfirst=True)
-    Station.__table__.create(engine)
-    Observation.__table__.create(engine)
+    db.session.query(Observation).delete()
+    db.session.query(Station).delete()
+    db.session.commit()
+    Observation.__table__.drop(db.engine, checkfirst=True)
+    Station.__table__.drop(db.engine, checkfirst=True)
+    Station.__table__.create(db.engine)
+    Observation.__table__.create(db.engine)
     importer = DWD_Importer(host, path)
     for station in importer.do_import(limit):
         geom = WKTElement(station.coords.wkt, srid=4326) if station.coords is not None else None
@@ -273,8 +260,8 @@ def import_dwd_db(host=DEFAULT_HOST, path=DEFAULT_PATH, limit=None):
         for m in station.measurements:
             o = Observation(date=m.date, rainfall=m.rainfall, temperature=m.temperature)
             obj.observations.append(o)
-        session.add(obj)
-        session.commit()
+        db.session.add(obj)
+        db.session.commit()
 
         print("%s: %d" % (station.name, len(station.measurements)))
 

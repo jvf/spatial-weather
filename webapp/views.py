@@ -1,13 +1,6 @@
-from webapp import app
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from webapp import app, db
 from models.map import Country, District, Station
 from flask import render_template, request, abort, json
-
-
-engine = create_engine('postgresql://myapp:dbpass@localhost:15432/spatial', echo=True)
-Session = sessionmaker(bind=engine)
-session = Session()
 
 
 @app.route('/district.json')
@@ -16,7 +9,7 @@ def get_district():
     lon = float(request.args.get("lon"))
     pt = 'SRID=4326;POINT(%s %s)' % (lon, lat)
 
-    q = session.query(District.geometry.ST_AsGeoJSON()).filter(District.geometry.ST_Intersects(pt))
+    q = db.session.query(District.geometry.ST_AsGeoJSON()).filter(District.geometry.ST_Intersects(pt))
     geojson = q.scalar()
 
     if not geojson:
@@ -27,7 +20,7 @@ def get_district():
 
 @app.route('/stations.json')
 def get_stations():
-    stations = session.query(Station.region.ST_AsGeoJSON()).filter(Station.region != None).all()
+    stations = db.session.query(Station.region.ST_AsGeoJSON()).filter(Station.region != None).all()
     stations = [json.loads(station[0]) for station in stations]
 
     return json.jsonify(features=stations)

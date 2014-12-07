@@ -1,13 +1,13 @@
-from sqlalchemy.ext.declarative import declarative_base
+from webapp import db
 from sqlalchemy import Column, Integer, BigInteger, String, Float, \
     ForeignKey, DateTime
 from sqlalchemy.orm import relationship, backref
 from geoalchemy2 import Geometry
 
-Base = declarative_base()
 
 
-class Osm_Admin(Base):
+
+class Osm_Admin(db.Model):
     __tablename__ = 'osm_admin'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
@@ -18,7 +18,7 @@ class Osm_Admin(Base):
     geometry = Column(Geometry(geometry_type='GEOMETRY', srid=3857))
 
 
-class Osm_Places(Base):
+class Osm_Places(db.Model):
     __tablename__ = 'osm_places'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
@@ -29,7 +29,7 @@ class Osm_Places(Base):
     geometry = Column(Geometry(geometry_type='POINT', srid=3857))
 
 
-class Country(Base):
+class Country(db.Model):
     __tablename__ = 'country'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
@@ -49,7 +49,7 @@ class State(Base):
     geometry = Column(Geometry(geometry_type='GEOMETRY', srid=4326))
 
 
-class District(Base):
+class District(db.Model):
     __tablename__ = 'district'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
@@ -59,7 +59,7 @@ class District(Base):
     geometry = Column(Geometry(geometry_type='GEOMETRY', srid=4326))
 
 
-class Cities(Base):
+class Cities(db.Model):
     __tablename__ = 'cities'
     id = Column(Integer, primary_key=True)
     osm_id = Column(BigInteger)
@@ -70,7 +70,7 @@ class Cities(Base):
     geometry = Column(Geometry(geometry_type='POINT', srid=4326))
 
 
-class Station(Base):
+class Station(db.Model):
     __tablename__ = 'stations'
     id = Column(Integer, primary_key=True)
     dwd_id = Column(Integer)
@@ -104,7 +104,7 @@ class Cells(Base):
 '''
 
 
-class Observation(Base):
+class Observation(db.Model):
     __tablename__ = 'observations'
     id = Column(Integer, primary_key=True)
     date = Column(DateTime)
@@ -114,7 +114,7 @@ class Observation(Base):
     station_id = Column(Integer, ForeignKey('stations.id'))
 
 
-class Forecast(Base):
+class Forecast(db.Model):
     __tablename__ = 'forecasts'
     id = Column(Integer, primary_key=True)
     # TODO: Model fields
