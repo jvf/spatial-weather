@@ -1,5 +1,5 @@
 
-from models.map import Base, Station, Observation, Forecast
+from models.map import Station, Observation, Forecast
 from webapp import db
 from shapely.geometry import Polygon
 import argparse

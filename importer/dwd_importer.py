@@ -12,6 +12,7 @@ from shapely.geometry import Point, Polygon, MultiPolygon
 from scipy.spatial import Voronoi
 from geoalchemy2 import WKTElement
 from webapp import db
+
 """
 
 Importer for DWD observations (adapted from https://github.com/cholin/spatial/tree/master/scripts)
@@ -43,7 +44,7 @@ intersection with this polygon and use the result as final region
 
 DEFAULT_HOST = 'ftp.dwd.de'
 DEFAULT_PATH = 'pub/CDC/observations_germany/climate/daily/kl/recent/'
-DEFAULT_FILE_NAME = 'weather.json'
+DEFAULT_FILE_NAME = 'data/weather.json'
 
 class DWD_Importer:
 
@@ -237,17 +238,22 @@ def ftp_get_file(ftp, path):
     return memfile
 
 
-def import_dwd_db(host=DEFAULT_HOST, path=DEFAULT_PATH, limit=None):
-    from models.map import Station, Observation
-    db.session.query(Observation).delete()
-    db.session.query(Station).delete()
-    db.session.commit()
+def drop_tables():
+    from models.map import Station, Observation, Forecast
+    Forecast.__table__.drop(db.engine, checkfirst=True)
     Observation.__table__.drop(db.engine, checkfirst=True)
     Station.__table__.drop(db.engine, checkfirst=True)
     Station.__table__.create(db.engine)
     Observation.__table__.create(db.engine)
+
+
+def import_dwd_db(host=DEFAULT_HOST, path=DEFAULT_PATH, limit=None):
+    from models.map import Station, Observation
+
+    drop_tables()
     importer = DWD_Importer(host, path)
-    for station in importer.do_import(limit):
+    stations = importer.do_import(limit)
+    for station in stations:
         geom = WKTElement(station.coords.wkt, srid=4326) if station.coords is not None else None
         region = WKTElement(station.region.wkt, srid=4326) if station.region is not None else None
         obj = Station(
@@ -267,11 +273,50 @@ def import_dwd_db(host=DEFAULT_HOST, path=DEFAULT_PATH, limit=None):
 
 
 def import_dwd_json(host=DEFAULT_HOST, path=DEFAULT_PATH, file=DEFAULT_FILE_NAME, limit=None):
-
     importer = DWD_Importer(host, path)
     for station in importer.do_import(limit):
         print("Added %s (%d measurements)" % (station.name, len(station.measurements)))
 
     with open(file, 'w') as f:
-        data = map(lambda x: x.to_dict(), importer.stations)
+        data = []
+        for station in importer.stations:
+            station_dict = station.to_dict()
+            station_dict['measurements'] = [measurement for measurement in station_dict['measurements']]
+            data.append(station_dict)
         json.dump(data, f, sort_keys=True, indent=4, ensure_ascii=False)
+
+
+def import_dwd_from_json(data, drop=True):
+    from models.map import Station, Observation, Forecast
+    if drop:
+        Forecast.__table__.drop(db.engine, checkfirst=True)
+        Observation.__table__.drop(db.engine, checkfirst=True)
+        Station.__table__.drop(db.engine, checkfirst=True)
+
+        Station.__table__.create(db.engine)
+        Observation.__table__.create(db.engine)
+        Forecast.__table__.create(db.engine)
+
+    for s in data:
+        print("Importing ", s["name"])
+        station = Station()
+        station.name = s["name"]
+        station.dwd_id = s["id"]
+        station.altitude = s["altitude"]
+        station.geometry = 'SRID=4326; %s' % s["coords"]
+        station.region = list2ewkt(s["region"], 4326)
+        for measurement in s['measurements']:
+            observation = Observation()
+            observation.date = measurement['date']
+            observation.rainfall = measurement['rainfall']
+            observation.temperature = measurement['temperature']
+            station.observations.append(observation)
+        db.session.add(station)
+        db.session.commit()
+
+
+def list2ewkt(items, srid=4326):
+    if items is None:
+        return 'SRID=%s;POLYGON EMPTY"' % (srid)
+    else:
+        return 'SRID=%s; %s' % (srid, items)
