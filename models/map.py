@@ -2,7 +2,7 @@ from webapp import db
 from sqlalchemy import Column, Integer, BigInteger, String, Float, \
     ForeignKey, DateTime
 from sqlalchemy.orm import relationship, backref
-from geoalchemy2 import Geometry
+from geoalchemy2 import Geometry, Raster
 
 
 
@@ -120,3 +120,22 @@ class Forecast(db.Model):
     # TODO: Model fields
 
     station_id = Column(Integer, ForeignKey('stations.id'))
+
+
+class GFS(db.Model):
+    __tablename__ = 'gfs_data'
+    forecast_date = Column(DateTime, primary_key=True)
+    forecast_hour = Column(Integer, primary_key=True)
+
+    import_id = Column(Integer)
+
+    # Raster should be created on the database level to ensure the srid
+    # is correct and stuff
+    rast = Column(Raster())
+
+
+class GFSImport(db.Model):
+    __tablename__ = 'gfs_import'
+    rid = Column(Integer, primary_key=True)
+    filename = Column(String)
+    rast = Column(Raster)
