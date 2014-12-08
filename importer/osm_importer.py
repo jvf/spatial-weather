@@ -2,7 +2,7 @@ import os
 import subprocess
 from sqlalchemy import func
 from webapp import app, db
-from models.map import Osm_Admin, Osm_Places, Country, State, District, Cities, Base
+from models.map import Osm_Admin, Osm_Places, Country, State, District, Cities
 
 
 # assumes an existing db 'spatial' with postgis extension
@@ -17,29 +17,31 @@ pbf = os.path.abspath('data' + os.path.sep + 'germany-latest.osm.pbf')
 imposm_dir = os.path.abspath('importer')
 
 
-def run():
+def run(imposm, load, drop_tables):
+
     # import from pbf file with imposm
-    import_from_pbf()
+    if imposm:
+        import_from_pbf()
 
-    # osm_admin -> country
-    create_from_admin(Country, 2)
+    if load:
+        # osm_admin -> country
+        create_from_admin(Country, 2)
 
-    # osm_admin -> state
-    create_from_admin(State, 4)
+        # osm_admin -> state
+        create_from_admin(State, 4)
 
-    # osm_admin -> district
-    create_from_admin(District, 6)
+        # osm_admin -> district
+        create_from_admin(District, 6)
 
-    # osm_places -> cities
-    create_cities()
+        # osm_places -> cities
+        create_cities()
 
-    db.session.commit()
+        db.session.commit()
 
     # drop the imposm tables
-    Osm_Admin.__table__.drop(db.engine, checkfirst=True)
-    Osm_Places.__table__.drop(db.engine, checkfirst=True)
-
-    db.session.close()
+    if drop_tables:
+        Osm_Admin.__table__.drop(db.engine, checkfirst=True)
+        Osm_Places.__table__.drop(db.engine, checkfirst=True)
 
 
 def import_from_pbf():
