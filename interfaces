@@ -1,0 +1,49 @@
+# Interfaces
+
+/info/{type}/{lat},{lon}.json?{datetime},{hours},{forecast}
+
+Eingabe:
+- type als string [district, state, station]
+- lat,lon als request paramter oder als routenparamter?
+- [ Datetime, Stunden, Vorhersage:bool ]
+
+Ausgabe:
+GeoJSON Feature
+- geometry
+- properties
+  - Name
+  - Temp
+  - Rain
+  - ... 
+  - Statisiken
+
+
+/forecast/{type}/{datetime}/{hours}.json
+
+Eingabe:
+- type als string [district, state, station]
+- Vorhersagezeitpunkt (Datetime)
+- Vorhersagezeitabstand (Stunden)
+
+Ausgabe:
+GeoJSON FeatureCollection
+- geometry
+- properties
+  - temp
+  - rain
+  - ...
+
+
+/observation/{type}/{datetime}.json
+
+Eingabe
+- type als string [district, state, station]
+- Messzeitpunkt (Datetime)
+
+Ausgabe:
+GeoJSON FeatureCollection
+- geometry
+- properties
+  - temp
+  - rain
+  - ...
