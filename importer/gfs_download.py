@@ -9,7 +9,7 @@ import time
 # .5x.5 grid
 URL = 'http://nomads.ncep.noaa.gov/cgi-bin/filter_gfs_hd.pl' \
       '?dir=%2Fgfs.{model_date}{model_hour:02}%2Fmaster' \
-      '&file=gfs.t{model_hour}z.mastergrb2f{forecast_hour:02}' \
+      '&file=gfs.t{model_hour:02}z.mastergrb2f{forecast_hour:02}' \
       '&lev_2_m_above_ground=on' \
       '&lev_entire_atmosphere_%5C%28considered_as_a_single_layer%5C%29=on' \
       '&var_PWAT=on' \
@@ -70,7 +70,7 @@ def main():
             url_ = URL.format(model_date=modeldate.strftime("%Y%m%d"),
                               model_hour=modeldate.hour,
                               forecast_hour=hour)
-            file = "gfs.t{model_hour}z.mastergrb2f{forecast_hour:02}".format(
+            file = "gfs.t{model_hour:02}z.mastergrb2f{forecast_hour:02}".format(
                 model_date=modeldate.strftime("%Y%m%d"),
                 model_hour=modeldate.hour,
                 forecast_hour=hour
