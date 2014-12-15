@@ -38,6 +38,24 @@ def prepare_outputdir(output, modeldate, keep=False):
     return outdir
 
 
+def download(url, out, repeat=5, sleep=15):
+    run = 0
+    while True:
+        try: 
+            # Be nice and sleep some milli seconds
+            time.sleep(sleep)
+            
+            print("Going to download '{url}' to '{out}'".format(url=url, out=out))
+            urlretrieve(url, out)
+
+            return
+        except:
+            run = run + 1
+            if run < repeat:
+                print("error in run {} -> retry".format(run))
+            else:
+                raise
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("modeldate", type=str, default="latest")
@@ -77,11 +95,8 @@ def main():
             )
 
             out = path.join(outdir, file)
-            print("Going to download '{url}' to '{out}'".format(url=url_, out=out))
-            urlretrieve(url_, out)
+            download(url_, out)
 
-            # Be nice and sleep some milli seconds
-            time.sleep(0.01)
 
         modeldate = modeldate + timedelta(hours=6)
 
