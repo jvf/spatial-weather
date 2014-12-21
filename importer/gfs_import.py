@@ -70,7 +70,7 @@ def import2db(date, files, sqlfile):
         .filter(GFSImport.rid == GFS.import_id).limit(1).statement
 
     upd = GFS.__table__.update() \
-        .where(GFS.import_id is not None) \
+        .where(GFS.import_id != None) \
         .values(rast=stmt, import_id=None)
     db.engine.execute(upd)
 
