@@ -21,32 +21,14 @@ $(document).ready(function() {
     // Export the map to the global scope for debugging
     window.map = map;
 
-    // Geojson overlays
-    var stationsLayer = L.geoJson.ajax("stations.json",{
-        //style: {
-        //    color: "black",
-        //    fillColor: "yellow"
-        //
-        //},
-        //
-        //onEachFeature: function (feature, layer) {
-        //},
-        //
-        //middleware:function(data) {
-        //    return data;
-        //}
-    });
-
     // Add a control to change between layers
     var baseLayers = {
         "OSM": osmLayer,
         "Mapbox": mapboxLayer
     };
-    // and toggle overlays
-    var overlays = {
-        "Wetterstationen": stationsLayer,
-    };
-    L.control.layers(baseLayers, overlays).addTo(map);
+    L.control.layers(baseLayers).addTo(map);
 
-
+    // Add main weather control (and layer) to the map
+    var weatherControl  = L.control.weather();
+    weatherControl.addTo(map);
 }); // End ready()

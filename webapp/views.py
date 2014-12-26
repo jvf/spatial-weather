@@ -17,6 +17,10 @@ def get_district():
 
     return geojson
 
+@app.route('/forecast/<path:path>')
+@app.route('/observation/<path:path>')
+def dummy(path):
+    return app.send_static_file("lander.geojson")
 
 @app.route('/stations.json')
 def get_stations():
