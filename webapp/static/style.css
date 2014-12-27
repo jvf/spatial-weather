@@ -1,3 +1,45 @@
 #map {
     height: 700px;
 }
+
+.leaflet-control-weather {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
+    border-radius: 4px;
+
+	background-color: #fff;
+    padding: 6px;
+
+
+    /*
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	*/
+	color: black;
+}
+
+.leaflet-control-weather-column {
+    display: block;
+    float: left;
+    margin-right: 6px;
+}
+
+.leaflet-control-weather-column-label,
+.leaflet-control-weather-column > input,
+.leaflet-control-weather-column > select,
+.leaflet-control-weather-column > .cell {
+    display: block;
+}
+
+input.weather-forecast-flag,
+input.weather-forecast-hours {
+    vertical-align:middle;
+}
+
+input.weather-forecast-hours:disabled {
+    opacity: 0.5;
+}

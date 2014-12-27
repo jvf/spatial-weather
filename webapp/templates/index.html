@@ -20,6 +20,10 @@
     <script src="{{ url_for('static', filename="weather.js") }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename="style.css") }}">
 
+    <script type=text/javascript>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
 </head>
 <body>
 <div id="map"></div>

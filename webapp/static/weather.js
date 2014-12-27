@@ -29,6 +29,6 @@ $(document).ready(function() {
     L.control.layers(baseLayers).addTo(map);
 
     // Add main weather control (and layer) to the map
-    var weatherControl  = L.control.weather();
+    var weatherControl  = L.control.weather($SCRIPT_ROOT);
     weatherControl.addTo(map);
 }); // End ready()
