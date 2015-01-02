@@ -32,7 +32,9 @@ def info(request_type):
         http://127.0.0.1:5000/info/station.json?lat=8.237&lon=52.9335&forecast=False&datetime=2014120100
         http://127.0.0.1:5000/info/district.json?lat=10.237&lon=52.9335&forecast=False&datetime=2014120100
         http://127.0.0.1:5000/info/district.json?lat=9.237&lon=52.9335&forecast=False&datetime=2014120100 (example for no stations in district)
+        http://127.0.0.1:5000/info/state.json?lat=13.237&lon=52.435&forecast=False&datetime=201420100
     """
+    # todo handle dates without observations properly
     lat = float(request.args.get("lat"))
     lon = float(request.args.get("lon"))
     forecast = request.args.get("forecast")
@@ -65,6 +67,17 @@ def info(request_type):
         stations = Station.query.filter(Station.region.ST_Intersects(district.geometry)).all()
         calc_means(request_datetime, response_builder, stations, district)
 
+        response = to_feature(response_builder)
+        return json.jsonify(response)
+    elif request_type == "state":
+        state = State.query.filter(State.geometry.ST_Intersects('SRID=4326;POINT(%s %s)' % (lat, lon))).first()
+        geometry = db.session.scalar(func.ST_AsGeoJSON(state.geometry))
+
+        response_builder = {"name": state.name, "admin_entity": State.__tablename__, "admin_level": state.admin_level,
+                            "geometry": geometry, "observations": {}}
+
+        stations = Station.query.filter(Station.geometry.ST_Intersects(state.geometry)).all()
+        calc_means(request_datetime, response_builder, stations, state)
         response = to_feature(response_builder)
         return json.jsonify(response)
     else:
