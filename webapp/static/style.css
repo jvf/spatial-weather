@@ -43,3 +43,14 @@ input.weather-forecast-hours {
 input.weather-forecast-hours:disabled {
     opacity: 0.5;
 }
+
+
+.popup-loading .leaflet-popup-content-wrapper {
+    background: #fff center no-repeat url("./images/spinner.gif");
+    height: 32px;
+}
+
+.popup-loading-error .leaflet-popup-content-wrapper {
+    background: #fff center no-repeat url("./images/error.png");
+    height: 32px;
+}

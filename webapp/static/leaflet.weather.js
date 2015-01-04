@@ -1,3 +1,6 @@
+
+
+
 L.Control.weather = L.Control.extend({
 
     options: {
@@ -6,6 +9,7 @@ L.Control.weather = L.Control.extend({
 
     _dateFormat: "Y-m-d H:i",
     _layer: undefined,
+    _popupLayer: undefined,
     _config: {},
     _scriptRoot: "",
 
@@ -19,35 +23,37 @@ L.Control.weather = L.Control.extend({
         window.weather = this;
     },
 
-    // Create all the HTML elements, events and the AJAX geojson Layer
+    // Create all the HTML elements, events and layers
     onAdd: function (map) {
         this._container = this._createContainer();
 
         L.DomEvent.disableClickPropagation(this._container);
         // TODO: Events with Leaflet?
-        $(this._container).on("change", null, this, this.onChange);
+        this._jquery_change_handler = L.Util.bind(this._update, this);
+        $(this._container).on("change", this._jquery_change_handler);
 
         // Initialize the geojson layer
         this._layer = new L.GeoJSON.AJAX();
         L.setOptions(this._layer, {
-            style: this._getStyle()
+            style: L.Util.bind(this._defaultStyle, this),
+            onEachFeature: L.Util.bind(this._onEachFeature, this)
         });
+
         this._update();
 
         map.addLayer(this._layer);
 
+        this._popupLayer = new L.LayerGroup();
+        map.addLayer(this._popupLayer);
+
         return this._container;
     },
 
+    // Remove the container, events and layers
     onRemove: function(map) {
-        $(this._container).off("change", null, this._onChange);
+        $(this._container).off("change", this._jquery_change_handler);
         map.removeLayer(this._layer);
-    },
-
-    // Fired by jQuery: calls _update in the context of the correct object
-    onChange: function(event) {
-        var that = event.data;
-        that._update();
+        map.remove(this._popupLayer);
     },
 
     // Called whenever the config changes and the correct geometry has to be displayed
@@ -68,14 +74,16 @@ L.Control.weather = L.Control.extend({
         $(".weather-forecast-hours", this._container).prop('disabled', disabled);
     },
 
-    // Return a closured style function, which has access to _this_.
-    _getStyle: function() {
-        var that = this;
-        return (function(feature) {
-            return {
-                color: that._color(feature)
-            }
-        });
+    _defaultStyle: function(feature) {
+        return {
+            color: this._color(feature)
+        }
+    },
+
+    _highlightStyle: function(feature) {
+        return {
+            color: "#000000"
+        }
     },
 
     _color: function(feature) {
@@ -146,6 +154,73 @@ L.Control.weather = L.Control.extend({
     },
 
 
+    // Add events to show additional information, loadaded by ajax, for each
+    // feature/cell
+    _onEachFeature: function(feature, layer) {
+        var popup = L.popup({
+            className: "popup-loading"
+        }, layer);
+
+        layer.bindPopup(popup);
+
+        layer.on({
+            remove: function(e) {
+                // TODO: remove listener
+            },
+
+            popupopen: function(e) {
+                console.log(e);
+                var layer = e.target;
+                layer.setStyle(this._highlightStyle(layer.feature));
+
+                // Closures ftw
+                var popup = e.popup;
+                var self = this;
+
+                // Should come from a click...
+                var latlng = popup.getLatLng();
+
+                var url = this._scriptRoot + "/info/" + this._config.raster + ".json";
+                var data = {
+                    forecast: this._config.forecast ? "True" : "False",
+                    datetime: this._dateToString(this._config.date),
+                    lat: latlng.lat,
+                    lon: latlng.lng
+                };
+
+                var request = $.getJSON(url, data, function(data, textStatus, jqXHR) {
+                    self._onPopupLoad(popup, data, textStatus, jqXHR);
+                });
+                request.fail(function() {
+                    $(popup._container).removeClass("popup-loading");
+                    $(popup._container).addClass("popup-loading-error");
+                });
+                popup._ajaxRequest = request;
+            },
+
+            popupclose: function(e) {
+                var layer = e.target;
+                layer.setStyle(this._defaultStyle(layer.feature));
+                this._popupLayer.clearLayers();
+
+                e.popup._ajaxRequest.abort();
+            }
+        }, this);
+    },
+
+    // Create HTML from the json response and display additional geometries.
+    _onPopupLoad: function(popup, data) {
+        $(popup._container).removeClass("popup-loading");
+
+        var l = L.geoJson(data.geometry);
+        this._popupLayer.addLayer(l);
+
+        var content = "<h3>" + data.name + "</h3>";
+
+        popup.setContent(content);
+    },
+
+
     _createContainer: function() {
 		var container, cell;
         container = L.DomUtil.create("div", "leaflet-control-weather");
@@ -184,7 +259,9 @@ L.Control.weather = L.Control.extend({
 
         this._createColumn("Forecast", cell, container);
 
-        return container;
+        return container
+
+
     },
 
     // Create a select element with the given name and the key: value pairs as options
