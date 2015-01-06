@@ -120,10 +120,15 @@ L.Control.weather = L.Control.extend({
             forecast_hours = "0" + forecast_hours;
         }
 
+        var forecast = $(".weather-forecast-flag", container).prop("checked");
+        if (!forecast) {
+            date.hour = "00";
+        }
+
         this._config = {
             raster: $("#weather-raster-type", container).val(),
             values: $("#weather-values-type", container).val(),
-            forecast: $(".weather-forecast-flag", container).prop("checked"),
+            forecast: forecast,
             forecast_hours: forecast_hours,
             date: date
         };
@@ -212,11 +217,40 @@ L.Control.weather = L.Control.extend({
     _onPopupLoad: function(popup, data) {
         $(popup._container).removeClass("popup-loading");
 
-        var l = L.geoJson(data.geometry);
+        var l = L.geoJson(data, {
+			//style:,
+			//onEachFeature:,
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, {
+					radius: 8,
+					fillColor: "#ff7800",
+					color: "#000",
+					weight: 1,
+					opacity: 1,
+					fillOpacity: 0.8
+				});
+			}
+		});
+
+        var pos = popup.getLatLng();
+        var bounds = l.getBounds();
+
+        if (data.geometry.type == "Point") {
+            pos = bounds.getCenter();
+        } else {
+            pos.lng = bounds.getCenter().lng;
+            pos.lat = bounds.getNorth();
+        }
+
         this._popupLayer.addLayer(l);
 
-        var content = "<h3>" + data.name + "</h3>";
+        var content = "<h3>" + data.properties.name + "</h3>" +
+                      "<dl>" +
+                        "<dt>Temperature</dt><dd>" + data.properties.temperature + "&deg;C</dd>" +
+                        "<dt>Mean Temperature</dt><dd>" + data.properties["mean temperature"] + "&deg;C </dd>" +
+                      "</dl>";
 
+        popup.setLatLng(pos);
         popup.setContent(content);
     },
 
@@ -302,7 +336,8 @@ L.Control.weather = L.Control.extend({
         now.setHours(hour, 0);
 
         $(input).datetimepicker({
-            value: now.dateFormat(this._dateFormat),
+            //TODO: value: now.dateFormat(this._dateFormat),
+            value: "2014-12-01 00:00",
             format: this._dateFormat,
 
             maxDate: 0,
