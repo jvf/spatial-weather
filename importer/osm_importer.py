@@ -52,9 +52,9 @@ def import_from_pbf():
     print(os.environ["PATH"])
     try:
         subprocess.check_call(['imposm3',
-                               'import -overwritecache -connection ' + connection + ' -mapping ' + mapping + ' -read ' + pbf + ' -write'])
+                               'import', '-overwritecache', '-connection', connection, '-mapping', mapping, '-read', pbf, '-write'])
         subprocess.check_call(
-            ['imposm3', 'import -connection ' + connection + ' -mapping ' + mapping + ' -deployproduction'])
+            ['imposm3', 'import', '-connection', connection, '-mapping', mapping, '-deployproduction'])
     except subprocess.CalledProcessError as e:
         print(e)
         print('Import not possible, aborting')
