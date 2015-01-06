@@ -41,19 +41,25 @@ def info(request_type):
     # datetime format JJJJMMTTHH (Observation: JJJJMMMTT00)
     request_datetime = datetime.strptime(request.args.get("datetime", 0000000000), "%Y%m%d%H")
     hours = request.args.get("hours", None)  # the number of hours into the future a forecast was made
+
+    # If the data isn't a forecast it should ignore the hours of the datetime (set to 00).
+    # TODO: discuss if this should handled at the client
+    if not forecast:
+        request_datetime = request_datetime.replace(hours=0, minute=0)
+
     if request_type == 'station' and forecast not in ['true', 'True']:
         station = db.session.query(Station.dwd_id, Station.name, Station.altitude,
                                    Station.geometry.ST_AsGeoJSON().label('geometry'), Observation.date,
                                    Observation.rainfall, Observation.temperature) \
             .filter(Observation.station_id == Station.id, Observation.date == request_datetime,
-                    func.ST_Intersects(Station.region, 'SRID=4326;POINT(%s %s)' % (lat, lon))) \
+                    func.ST_Intersects(Station.region, 'SRID=4326;POINT(%s %s)' % (lon, lat))) \
             .first()
 
         feature = to_feature(station._asdict())
         return json.jsonify(feature)
 
     elif request_type == "district":
-        district = District.query.filter(District.geometry.ST_Intersects('SRID=4326;POINT(%s %s)' % (lat, lon))).first()
+        district = District.query.filter(District.geometry.ST_Intersects('SRID=4326;POINT(%s %s)' % (lon, lat))).first()
         geometry = db.session.scalar(func.ST_AsGeoJSON(district.geometry))
 
         response_builder = {"name": district.name, "admin_entity": District.__tablename__,
@@ -70,7 +76,7 @@ def info(request_type):
         response = to_feature(response_builder)
         return json.jsonify(response)
     elif request_type == "state":
-        state = State.query.filter(State.geometry.ST_Intersects('SRID=4326;POINT(%s %s)' % (lat, lon))).first()
+        state = State.query.filter(State.geometry.ST_Intersects('SRID=4326;POINT(%s %s)' % (lon, lat))).first()
         geometry = db.session.scalar(func.ST_AsGeoJSON(state.geometry))
 
         response_builder = {"name": state.name, "admin_entity": State.__tablename__, "admin_level": state.admin_level,
@@ -102,7 +108,8 @@ def to_feature(fields):
     properties = {}
     for key, value in fields.items():
         if key == "geometry":
-            feature[key] = value
+            geom = json.loads(value)
+            feature[key] = geom
         else:
             properties[key] = value
 
