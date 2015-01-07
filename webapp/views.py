@@ -29,10 +29,10 @@ def dummy(path):
 @app.route('/info/<request_type>.json')
 def info(request_type):
     """ example queries:
-        http://127.0.0.1:5000/info/station.json?lat=8.237&lon=52.9335&forecast=False&datetime=2014120100
-        http://127.0.0.1:5000/info/district.json?lat=10.237&lon=52.9335&forecast=False&datetime=2014120100
-        http://127.0.0.1:5000/info/district.json?lat=9.237&lon=52.9335&forecast=False&datetime=2014120100 (example for no stations in district)
-        http://127.0.0.1:5000/info/state.json?lat=13.237&lon=52.435&forecast=False&datetime=201420100
+        http://127.0.0.1:5000/info/station.json?lon=8.237&lat=52.9335&forecast=False&datetime=2014120100
+        http://127.0.0.1:5000/info/district.json?lon=10.237&lat=52.9335&forecast=False&datetime=2014120100
+        http://127.0.0.1:5000/info/district.json?lon=9.237&lat=52.9335&forecast=False&datetime=2014120100 (example for no stations in district)
+        http://127.0.0.1:5000/info/state.json?lon=13.237&lat=52.435&forecast=False&datetime=201420100
     """
     # todo handle dates without observations properly
     lat = float(request.args.get("lat"))
