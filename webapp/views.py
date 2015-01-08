@@ -54,7 +54,8 @@ def info(request_type):
             .filter(Observation.station_id == Station.id, Observation.date == request_datetime,
                     func.ST_Intersects(Station.region, 'SRID=4326;POINT(%s %s)' % (lon, lat))) \
             .first()
-
+        if station == None:
+            abort(404)
         feature = to_feature(station._asdict())
         return json.jsonify(feature)
 
@@ -126,8 +127,12 @@ def calc_means(request_datetime, response_builder, stations, admin_entity):
     for station in stations:
         observation = Observation.query.filter(Observation.station_id == station.id,
                                                Observation.date == request_datetime).first()
+        if observation == None:
+            abort(404)
+
         contributing_area = db.session.scalar(func.ST_Area(func.ST_Intersection(station.region, admin_entity.geometry)))
         # ignore -999 values
+
         if observation.temperature != -999:
             mean_temp += (observation.temperature * contributing_area)
             weight_temp += contributing_area
@@ -142,3 +147,4 @@ def calc_means(request_datetime, response_builder, stations, admin_entity):
         #                                                   "weight": contributing_area}
     response_builder["mean temperature"] = mean_temp / weight_temp
     response_builder["mean rainfall"] = mean_rain / weight_rain
+    response_builder["date"] = observation.date
