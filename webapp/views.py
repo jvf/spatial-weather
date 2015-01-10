@@ -1,8 +1,10 @@
 from webapp import app, db
-from models.map import Country, State, District, Station, Observation
+from models.map import Country, State, District, Station, Observation, GFS as Forecast
 from flask import render_template, request, abort, json
 from geoalchemy2 import functions as func
+from sqlalchemy import func as func1, type_coerce
 from datetime import datetime
+import time
 
 
 @app.route('/district.json')
@@ -87,6 +89,82 @@ def info(request_type):
         calc_means(request_datetime, response_builder, stations, state)
         response = to_feature(response_builder)
         return json.jsonify(response)
+    else:
+        abort(404)
+
+
+@app.route('/forecast/<request_type>.json')
+def forecast(request_type):
+    """ example queries:
+    http://127.0.0.1:5000/forecast/district.json?datetime=2014121112&hours=6
+    http://127.0.0.1:5000/forecast/state.json?datetime=2014121112&hours=3
+    http://127.0.0.1:5000/forecast/station.json?datetime=2014121112&hours=9
+    """
+    # datetime format JJJJMMTTHH (Observation: JJJJMMMTT00)
+    request_datetime = datetime.strptime(request.args.get("datetime", 0000000000), "%Y%m%d%H")
+    hours = request.args.get("hours", None)  # the number of hours into the future a forecast was made
+
+    if request_type == 'state' or request_type == 'district' or request_type == 'station':
+        if request_type == 'state':
+            model = State
+            geo = State.geometry
+        elif request_type == 'district':
+            model = District
+            geo = District.geometry
+        elif request_type == 'station':
+            model = Station
+            geo = Station.region
+
+        start_time = time.clock()
+        forecasts = db.session \
+            .query(
+                model.name,
+                func.ST_AsGeoJSON(geo).label('geometry'),
+                func1.ST_SummaryStats(func1.ST_CLIP(Forecast.rast, 1, geo, -999, True), 1, True).label('stats_tmp'),
+                # func1.ST_SummaryStats(func1.ST_CLIP(Forecast.rast, 2, geo, -999, True), 1, True).label('stats_tmin'),
+                # func1.ST_SummaryStats(func1.ST_CLIP(Forecast.rast, 3, geo, -999, True), 1, True).label('stats_tmax'),
+                func1.ST_SummaryStats(func1.ST_CLIP(Forecast.rast, 4, geo, -999, True), 1, True).label('stats_pwat')
+            ) \
+            .filter(Forecast.rast.ST_Intersects(geo),
+                    Forecast.forecast_date == request_datetime,
+                    Forecast.forecast_hour == hours) \
+            .all()
+        print(time.clock() - start_time, "seconds for the query")
+
+        # abort on empty queries (usually due to dates or hours not covered)
+        if len(forecasts) == 0:
+            abort(404)
+
+        # build the response (FeatureCollection)
+        start_time = time.clock()
+        features = []
+
+        for f in forecasts:
+            response_builder = {'name': f.name, 'type': request_type, 'geometry': f.geometry}
+
+            # unpack summary stats (string of form '(<count>, <sum>, <mean>, <stddev>, <min>, <max>)'
+            for i in range(6):
+                stats_tmp = f.stats_tmp.replace('(', '').replace(')', '').split(',')
+                # stats_tmin = f.stats_tmin.replace('(', '').replace(')', '').split(',')
+                # stats_tmax = f.stats_tmax.replace('(', '').replace(')', '').split(',')
+                stats_pwat = f.stats_pwat.replace('(', '').replace(')', '').split(',')
+                keys = ['count', 'sum', 'mean', 'stddev', 'min', 'max']
+                response_builder['tmp_'+keys[i]] = stats_tmp[i]
+                # response_builder['tmin_'+keys[i]] = stats_tmin[i]
+                # response_builder['tmax_'+keys[i]] = stats_tmax[i]
+                response_builder['pwat_'+keys[i]] = stats_pwat[i]
+
+            features.append(to_feature(response_builder))
+
+        # build the feature collection
+        feautre_collection = {"type": "FeatureCollection", "features": features}
+        print(time.clock() - start_time, "seconds for building the dict")
+
+        # jsonify
+        start_time = time.clock()
+        response = json.jsonify(feautre_collection)
+        print(time.clock() - start_time, "seconds for jsonification")
+        return response
     else:
         abort(404)
 
