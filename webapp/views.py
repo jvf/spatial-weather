@@ -21,9 +21,33 @@ def get_district():
 
 
 @app.route('/forecast/<path:path>')
-@app.route('/observation/<path:path>')
 def dummy(path):
     return app.send_static_file("lander.geojson")
+
+
+@app.route('/observation/<request_type>.json')
+def fancyfunctionname(request_type):
+    request_datetime = datetime.strptime(request.args.get("datetime", 0000000000), "%Y%m%d%H")
+
+    if request_type == 'station':
+        # TODO: filter germany
+        stations = db.session.query(Station.dwd_id, Station.name, Station.altitude,
+                                    Station.region.ST_AsGeoJSON().label('geometry'), Observation.date,
+                                    Observation.rainfall, Observation.temperature) \
+            .filter(Observation.station_id == Station.id, Observation.date == request_datetime) \
+            .all()
+
+        stations = [station._asdict() for station in stations]
+        feature_collection = to_feature_collection(stations)
+
+        return json.jsonify(feature_collection)
+
+    elif request_type == "district":
+        abort(404)
+    elif request_type == "state":
+        abort(404)
+
+    abort(404)
 
 
 @app.route('/info/<request_type>.json')
@@ -37,7 +61,7 @@ def info(request_type):
     # todo handle dates without observations properly
     lat = float(request.args.get("lat"))
     lon = float(request.args.get("lon"))
-    forecast = request.args.get("forecast")
+    forecast = request.args.get("forecast") in ['true', 'True']
     # datetime format JJJJMMTTHH (Observation: JJJJMMMTT00)
     request_datetime = datetime.strptime(request.args.get("datetime", 0000000000), "%Y%m%d%H")
     hours = request.args.get("hours", None)  # the number of hours into the future a forecast was made
@@ -47,7 +71,7 @@ def info(request_type):
     if not forecast:
         request_datetime = request_datetime.replace(hours=0, minute=0)
 
-    if request_type == 'station' and forecast not in ['true', 'True']:
+    if request_type == 'station' and not forecast:
         station = db.session.query(Station.dwd_id, Station.name, Station.altitude,
                                    Station.geometry.ST_AsGeoJSON().label('geometry'), Observation.date,
                                    Observation.rainfall, Observation.temperature) \
@@ -101,6 +125,13 @@ def get_stations():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+def to_feature_collection(rows):
+    features = [to_feature(row) for row in rows]
+    collection = {"type": "FeatureCollection",
+                  "features": features}
+    return collection
 
 
 def to_feature(fields):
