@@ -44,6 +44,9 @@ def convert2psql(files, tmpdir, srid):
 
 
 def import2db(date, files, sqlfile):
+    GFS.__table__.create(db.engine, checkfirst=True)
+    GFSImport.__table__.create(db.engine, checkfirst=True)
+
     # Remove current results for this forecast
     delete = GFS.__table__.delete().where(GFS.forecast_date == date)
     db.engine.execute(delete)
