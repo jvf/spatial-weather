@@ -54,3 +54,10 @@ input.weather-forecast-hours:disabled {
     background: #fff center no-repeat url("./images/error.png");
     height: 32px;
 }
+
+.leaflet-container .leaflet-control-weather-legend {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.7);
+    width: 275px;
+    height: 32px;
+}

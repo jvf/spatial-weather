@@ -1,6 +1,3 @@
-
-
-
 L.Control.weather = L.Control.extend({
 
     options: {
@@ -12,6 +9,16 @@ L.Control.weather = L.Control.extend({
     _popupLayer: undefined,
     _config: {},
     _scriptRoot: "",
+
+    _scale: {
+        temp: d3.scale.quantize()
+            .domain([-30, 45])
+            .range(colorbrewer.RdBu[11]),
+        rain: d3.scale.quantize()
+            .domain([0, 20])
+            .range(colorbrewer.BuPu[9])
+    },
+    _legend: undefined,
 
     initialize: function (scriptRoot, options) {
         L.setOptions(this, options);
@@ -36,8 +43,12 @@ L.Control.weather = L.Control.extend({
         this._layer = new L.GeoJSON.AJAX();
         L.setOptions(this._layer, {
             style: L.Util.bind(this._defaultStyle, this),
-            onEachFeature: L.Util.bind(this._onEachFeature, this)
+            onEachFeature: L.Util.bind(this._onEachFeature, this),
+            //middleware: L.Util.bind(this._middleware, this)
         });
+
+        this._legend = new L.Control.weather.legend();
+        this._legend.addTo(map);
 
         this._update();
 
@@ -67,6 +78,9 @@ L.Control.weather = L.Control.extend({
         console.log(url);
 
         this._layer.refresh(url);
+
+        var type = this._config.values;
+        this._legend.update(this._scale[type], type);
     },
 
     _toggleForecastInput: function() {
@@ -76,28 +90,37 @@ L.Control.weather = L.Control.extend({
 
     _defaultStyle: function(feature) {
         return {
-            color: this._color(feature)
+            fillColor: this._color(feature),
+            fillOpacity: 0.8,
+            stroke: false,
+            color: "#000",
+            opacity: 1,
+            weight: 1
         }
     },
 
     _highlightStyle: function(feature) {
         return {
+            stroke: true,
             color: "#000000"
         }
     },
 
     _color: function(feature) {
-        var color;
-
-        if (this._config.values == "temp") {
-
-        } else if (this._config.values == "rain") {
-
+        var value;
+        if (this._config.values == "temp" && this._config.forecast) {
+            value = feature.properties["tmp_mean"];
+        } else if (this._config.values == "temp" && !this._config.forecast) {
+            value = feature.properties["temperature"];
+        } else if (this._config.values == "rain" && this._config.forecast) {
+            value = feature.properties["pwat_mean"];
+        } else if (this._config.values == "rain" && !this._config.forecast) {
+            value = feature.properties["rainfall"];
         }
 
-        color = ["#ff0000", "#00ff00", "#0000ff "][Math.floor(Math.random()*2.99)];
+        var scale = this._scale[this._config.values];
 
-        return color;
+        return scale(value);
     },
 
     // Read the current config from the html input fields and store it
@@ -144,18 +167,44 @@ L.Control.weather = L.Control.extend({
 
         if (this._config.forecast) {
             url =  "/forecast"
-                    + "/" + this._config.raster
-                    + "/" + this._dateToString(this._config.date)
-                    + "/" + this._config.forecast_hours
-                    + ".json";
+                    + "/" + this._config.raster + ".json"
+                    + "?datetime=" + this._dateToString(this._config.date)
+                    + "&hours=" + this._config.forecast_hours;
         } else {
             url =  "/observation"
-                    + "/" + this._config.raster
-                    + "/" + this._dateToString(this._config.date)
-                    + ".json";
+                    + "/" + this._config.raster + ".json"
+                    + "?datetime=" + this._dateToString(this._config.date);
         }
 
         return this._scriptRoot + url;
+    },
+
+    _middleware: function(data) {
+
+        var min, max;
+
+        if (this._config.values == "temp") {
+            min = max = data[0].properties.temperature;
+
+            for(var feature in data) {
+                min = Math.min(min, feature.properties.temperature);
+                max = Math.max(min, feature.properties.temperature);
+            }
+
+            // TODO: adapt scales?
+
+        } else if (this._config.values == "rain") {
+            min = max = data[0].properties.rainfall;
+
+            for(var feature in data) {
+                min = Math.min(min, feature.properties.rainfall);
+                max = Math.max(min, feature.properties.rainfall);
+            }
+
+            // TODO: adapt scales?
+        }
+
+        return data;
     },
 
 
@@ -232,6 +281,7 @@ L.Control.weather = L.Control.extend({
 			}
 		});
 
+        // Brauchts gar nicht, da ich ja eigentlich aus dem feature selbst schon ne pos hab.
         var pos = popup.getLatLng();
         var bounds = l.getBounds();
 
@@ -248,6 +298,7 @@ L.Control.weather = L.Control.extend({
                       "<dl>" +
                         "<dt>Temperature</dt><dd>" + data.properties.temperature + "&deg;C</dd>" +
                         "<dt>Mean Temperature</dt><dd>" + data.properties["mean temperature"] + "&deg;C </dd>" +
+                        "<dt>Rainfall</dt><dd>" + data.properties.rainfall + " ??</dd>" +
                       "</dl>";
 
         popup.setLatLng(pos);
@@ -284,7 +335,7 @@ L.Control.weather = L.Control.extend({
         input_hours = L.DomUtil.create("input", "weather-forecast-hours");
         input_hours.type = "range";
         input_hours.value = 0;
-        input_hours.min = 0;
+        input_hours.min = 3;
         input_hours.max = 129;
         input_hours.step = 3;
         cell.appendChild(input_hours);
@@ -374,6 +425,37 @@ L.Control.weather = L.Control.extend({
 		}
 
         return column;
+    }
+});
+
+L.Control.weather.legend = L.Control.extend({
+
+    options: {
+        position: "bottomright",
+        id: "leaflet-control-weather-legend"
+    },
+
+    initialize: function (options) {
+        L.setOptions(this, options);
+    },
+
+    // Create all the HTML elements, events and layers
+    onAdd: function (map) {
+		var container;
+        container = L.DomUtil.create("div", this.options.id);
+        container.setAttribute("id", this.options.id);
+
+        this._container = container;
+        return container;
+    },
+
+    update: function (scale, title) {
+        $(this._container).empty();
+        colorlegend("#" + this.options.id, scale, "quantile", {title: title});
+    },
+
+    // Remove the container, events and layers
+    onRemove: function (map) {
     }
 });
 
