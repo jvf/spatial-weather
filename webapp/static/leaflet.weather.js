@@ -1,7 +1,7 @@
 L.Control.weather = L.Control.extend({
 
     options: {
-        position: "topleft"
+        position: "bottomleft"
     },
 
     _dateFormat: "Y-m-d H:i",
@@ -13,7 +13,7 @@ L.Control.weather = L.Control.extend({
     _scale: {
         temp: d3.scale.quantize()
             .domain([-30, 45])
-            .range(colorbrewer.RdBu[11]),
+            .range(colorbrewer.RdBu[11].reverse()),
         rain: d3.scale.quantize()
             .domain([0, 20])
             .range(colorbrewer.BuPu[9])
@@ -76,8 +76,8 @@ L.Control.weather = L.Control.extend({
 
         url = this.getURL();
         console.log(url);
-
         this._layer.refresh(url);
+
 
         var type = this._config.values;
         this._legend.update(this._scale[type], type);
@@ -92,8 +92,8 @@ L.Control.weather = L.Control.extend({
         return {
             fillColor: this._color(feature),
             fillOpacity: 0.8,
-            stroke: false,
-            color: "#000",
+            stroke: true,
+            color: "#ccc",
             opacity: 1,
             weight: 1
         }
@@ -102,7 +102,9 @@ L.Control.weather = L.Control.extend({
     _highlightStyle: function(feature) {
         return {
             stroke: true,
-            color: "#000000"
+            color: "#ccc",
+            opacity: 1,
+            weight: 4
         }
     },
 
@@ -179,6 +181,7 @@ L.Control.weather = L.Control.extend({
         return this._scriptRoot + url;
     },
 
+    /*
     _middleware: function(data) {
 
         var min, max;
@@ -206,6 +209,7 @@ L.Control.weather = L.Control.extend({
 
         return data;
     },
+    */
 
 
     // Add events to show additional information, loadaded by ajax, for each
@@ -222,35 +226,7 @@ L.Control.weather = L.Control.extend({
                 // TODO: remove listener
             },
 
-            popupopen: function(e) {
-                console.log(e);
-                var layer = e.target;
-                layer.setStyle(this._highlightStyle(layer.feature));
-
-                // Closures ftw
-                var popup = e.popup;
-                var self = this;
-
-                // Should come from a click...
-                var latlng = popup.getLatLng();
-
-                var url = this._scriptRoot + "/info/" + this._config.raster + ".json";
-                var data = {
-                    forecast: this._config.forecast ? "True" : "False",
-                    datetime: this._dateToString(this._config.date),
-                    lat: latlng.lat,
-                    lon: latlng.lng
-                };
-
-                var request = $.getJSON(url, data, function(data, textStatus, jqXHR) {
-                    self._onPopupLoad(popup, data, textStatus, jqXHR);
-                });
-                request.fail(function() {
-                    $(popup._container).removeClass("popup-loading");
-                    $(popup._container).addClass("popup-loading-error");
-                });
-                popup._ajaxRequest = request;
-            },
+            popupopen: L.Util.bind(this._onPopupOpen, this),
 
             popupclose: function(e) {
                 var layer = e.target;
@@ -262,6 +238,44 @@ L.Control.weather = L.Control.extend({
         }, this);
     },
 
+    _onPopupOpen: function(e) {
+        var layer = e.target;
+        layer.setStyle(this._highlightStyle(layer.feature));
+
+        // Closures ftw
+        var popup = e.popup;
+        var self = this;
+
+        // Should come from a click...
+        var latlng = popup.getLatLng();
+
+        // Build request URL
+        var url = this._scriptRoot + "/info/" + this._config.raster + ".json";
+        var data = {
+            forecast: this._config.forecast ? "True" : "False",
+            datetime: this._dateToString(this._config.date),
+            hours: this._config.forecast_hours,
+            lat: latlng.lat,
+            lon: latlng.lng
+        };
+
+        var request = $.getJSON(url, data, function(data, textStatus, jqXHR) {
+            self._onPopupLoad(popup, data, textStatus, jqXHR);
+        });
+        request.fail(function() {
+            $(popup._container).removeClass("popup-loading");
+            $(popup._container).addClass("popup-loading-error");
+        });
+        popup._ajaxRequest = request;
+
+        // Position Pop-Up
+        var pos = latlng;
+        var bounds = layer.getBounds();
+        pos.lng = bounds.getCenter().lng;
+        pos.lat = bounds.getNorth();
+        popup.setLatLng(pos);
+    },
+
     // Create HTML from the json response and display additional geometries.
     _onPopupLoad: function(popup, data) {
         $(popup._container).removeClass("popup-loading");
@@ -271,47 +285,60 @@ L.Control.weather = L.Control.extend({
 			//onEachFeature:,
 			pointToLayer: function (feature, latlng) {
 				return L.circleMarker(latlng, {
-					radius: 8,
+					radius: 2,
 					fillColor: "#ff7800",
+                    fillOpacity: 0.8,
 					color: "#000",
 					weight: 1,
 					opacity: 1,
-					fillOpacity: 0.8
 				});
 			}
 		});
 
-        // Brauchts gar nicht, da ich ja eigentlich aus dem feature selbst schon ne pos hab.
-        var pos = popup.getLatLng();
-        var bounds = l.getBounds();
-
-        if (data.geometry.type == "Point") {
-            pos = bounds.getCenter();
-        } else {
-            pos.lng = bounds.getCenter().lng;
-            pos.lat = bounds.getNorth();
-        }
-
         this._popupLayer.addLayer(l);
-
-        var content = "<h3>" + data.properties.name + "</h3>" +
-                      "<dl>" +
-                        "<dt>Temperature</dt><dd>" + data.properties.temperature + "&deg;C</dd>" +
-                        "<dt>Mean Temperature</dt><dd>" + data.properties["mean temperature"] + "&deg;C </dd>" +
-                        "<dt>Rainfall</dt><dd>" + data.properties.rainfall + " ??</dd>" +
-                      "</dl>";
-
-        popup.setLatLng(pos);
+        var content = this._renderInfo(data);
         popup.setContent(content);
     },
 
+    _renderInfo: function(data) {
+        var content = L.DomUtil.create("div");
+        var h3 = L.DomUtil.create("h3", "name", content);
+        h3.innerHTML = data.properties.name;
+
+        var dl, dt, dd;
+        dl = L.DomUtil.create("dl", "", content);
+        for (var key in data.properties) {
+            dt = L.DomUtil.create("dt", "", dl);
+            dt.innerHTML = key;
+            dd = L.DomUtil.create("dd", "", dl);
+            dd.innerHTML = data.properties[key] + this._unit(key);
+        }
+
+        return content;
+    },
+
+    _unit: function(name) {
+        if (name.indexOf("temperature") > -1 || name.indexOf("tmp") > -1) {
+            return " &deg;C";
+        }
+
+        if (name.indexOf("rainfall") > -1 || name.indexOf("pwat") > -1) {
+            return " kg/(m^2)";
+        }
+
+        if (name.indexOf("altitude") > -1) {
+            return " m";
+        }
+
+        return "";
+    },
 
     _createContainer: function() {
 		var container, cell;
         container = L.DomUtil.create("div", "leaflet-control-weather");
 
         var select_raster = this._createSelect("weather-raster-type",
-            {"district": "District", "state": "State", "station": "Station"});
+            {"station": "Station", "state": "State", "district": "District"});
         this._createColumn("Raster", select_raster, container);
 
         var select_values = this._createSelect("weather-values-type",
@@ -345,8 +372,6 @@ L.Control.weather = L.Control.extend({
         this._createColumn("Forecast", cell, container);
 
         return container
-
-
     },
 
     // Create a select element with the given name and the key: value pairs as options

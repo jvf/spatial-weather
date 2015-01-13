@@ -5,8 +5,6 @@ from sqlalchemy.orm import relationship, backref
 from geoalchemy2 import Geometry, Raster
 
 
-
-
 class Osm_Admin(db.Model):
     __tablename__ = 'osm_admin'
     id = Column(Integer, primary_key=True)
@@ -102,6 +100,44 @@ class Cells(Base):
 
     station_id = Column(Integer, ForeignKey('stations.id'))
 '''
+
+
+class ContribState(db.Model):
+    __tablename__ = 'contrib_state'
+    state_id = Column(Integer, ForeignKey(State.id, ondelete='CASCADE'), primary_key=True)
+    station_id = Column(Integer, ForeignKey(Station.id, ondelete='CASCADE' ), primary_key=True)
+    area = Column(Float)
+
+    @classmethod
+    def fill(cls):
+        with db.engine.begin() as c:
+            query = """\
+TRUNCATE TABLE {tablename};
+INSERT INTO {tablename}
+SELECT s.id as state_id, st.id as station_id, ST_Area(ST_Intersection(st.region, s.geometry)) as area
+  FROM state s, stations st
+ WHERE ST_Intersects(s.geometry, st.region);
+            """.format(tablename=cls.__tablename__)
+            c.execute(query)
+
+
+class ContribDistrict(db.Model):
+    __tablename__ = 'contrib_district'
+    district_id = Column(Integer, ForeignKey(District.id, ondelete='CASCADE'), primary_key=True)
+    station_id = Column(Integer, ForeignKey(Station.id, ondelete='CASCADE' ), primary_key=True)
+    area = Column(Float)
+
+    @classmethod
+    def fill(cls):
+        with db.engine.begin() as c:
+            query = """\
+TRUNCATE TABLE {tablename};
+INSERT INTO {tablename}
+SELECT d.id as district_id, st.id as station_id, ST_Area(ST_Intersection(st.region, d.geometry)) as area
+  FROM district d, stations st
+ WHERE ST_Intersects(d.geometry, st.region);
+            """.format(tablename=cls.__tablename__)
+            c.execute(query)
 
 
 class Observation(db.Model):
