@@ -45,7 +45,7 @@ def drop_tables(tables):
 DEFAULT_FILE_NAME = 'data/weather.json'
 @manager.option('--to_json', action='store_true', dest='to_json', default=False,
                 help="import data to json")
-@manager.option('--_from_json', action='store_true', dest='load_from_json', default=False,
+@manager.option('--from_json', action='store_true', dest='load_from_json', default=False,
                 help="import from json file")
 def import_dwd(to_json, load_from_json, file=DEFAULT_FILE_NAME):
     """import dwd weather data, either directly to the database or to/from a json file"""
