@@ -286,16 +286,17 @@ def import_dwd_json(host=DEFAULT_HOST, path=DEFAULT_PATH, file=DEFAULT_FILE_NAME
         json.dump(data, f, sort_keys=True, indent=4, ensure_ascii=False)
 
 
-def import_dwd_from_json(data, drop=True):
+def import_dwd_from_json(data, truncate=True):
     from models.map import Station, Observation, Forecast
-    if drop:
-        Forecast.__table__.drop(db.engine, checkfirst=True)
-        Observation.__table__.drop(db.engine, checkfirst=True)
-        Station.__table__.drop(db.engine, checkfirst=True)
 
-        Station.__table__.create(db.engine)
-        Observation.__table__.create(db.engine)
-        Forecast.__table__.create(db.engine)
+    Station.__table__.create(db.engine, checkfirst=True)
+    Observation.__table__.create(db.engine, checkfirst=True)
+    Forecast.__table__.create(db.engine, checkfirst=True)
+
+    if truncate: 
+        Station.query.delete()
+        Observation.query.delete()
+        Forecast.query.delete()
 
     for s in data:
         print("Importing ", s["name"])
