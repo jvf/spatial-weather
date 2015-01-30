@@ -48,8 +48,8 @@ def observation(request_type):
                     District.id == ContribDistrict.district_id,
                     Station.id == ContribDistrict.station_id,
                     Station.id == Observation.station_id,
-                    #Observation.rainfall != -999,
-                    #Observation.temperature != -999
+                    Observation.rainfall != -999,
+                    Observation.temperature != -999
                     )\
             .group_by(District.id)
 
@@ -79,8 +79,8 @@ def observation(request_type):
                     State.id == ContribState.state_id,
                     Station.id == ContribState.station_id,
                     Station.id == Observation.station_id,
-                    #Observation.rainfall != -999,
-                    #Observation.temperature != -999
+                    Observation.rainfall != -999,
+                    Observation.temperature != -999
                     )\
             .group_by(State.id)
 

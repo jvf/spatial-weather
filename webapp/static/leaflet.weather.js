@@ -12,7 +12,7 @@ L.Control.weather = L.Control.extend({
 
     _scale: {
         temp: d3.scale.quantize()
-            .domain([-30, 45])
+            .domain([-5, 10])
             .range(colorbrewer.RdBu[11].reverse()),
         rain: d3.scale.quantize()
             .domain([0, 20])
@@ -413,7 +413,10 @@ L.Control.weather = L.Control.extend({
 
         $(input).datetimepicker({
             //TODO: value: now.dateFormat(this._dateFormat),
-            value: "2014-12-01 00:00",
+            value: "2015-01-11 00:00",
+            minDate: "2014/11/11",
+            maxDate: "2015/01/11",
+
             format: this._dateFormat,
 
             maxDate: 0,
