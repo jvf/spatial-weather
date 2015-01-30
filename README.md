@@ -12,3 +12,12 @@ When compiling entirely from source, You also might need to install the followin
 libraries: (for shapely): libgeos-dev; (for scipy): libblas-dev, liblapack-dev,
 gfortran.
 
+# import dwd
+
+python manage.py import_dwd --to_json
+
+imports the recent dwd data into data/weather.json
+
+python manage.py import_dwd --from_json
+
+imports dwd observation data from data/weather.json
