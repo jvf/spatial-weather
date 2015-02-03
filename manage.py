@@ -23,9 +23,10 @@ def import_osm(imposm, load, drop_tables):
     osm_import(imposm, load, drop_tables)
 
 
-@manager.option('-t', '--tables', dest='tables', help="osm, map, dwd, gfs", required=True)
+@manager.option('-t', '--tables', dest='tables', help="osm, map, dwd, gfs, contrib", required=True)
 def drop_tables(tables):
-    """"drop the tables for osm (osm_admin, osm_places), map (country, state, district, cities) or dwd (station, observation)"""
+    """"drop the tables for osm (osm_admin, osm_places), map (country, state, district, cities),
+    dwd (station, observation) or contrib (contrib_state, contrib_district)"""
 
     if tables == 'osm':
         Osm_Admin.__table__.drop(db.engine, checkfirst=True)
@@ -41,7 +42,12 @@ def drop_tables(tables):
         db.session.commit()
         Observation.__table__.drop(db.engine, checkfirst=True)
         Station.__table__.drop(db.engine, checkfirst=True)
-
+    elif tables == 'gfs':
+        GFSImport.__table__.drop(db.engine, checkfirst=True)
+        GFSImport.__table__.drop(db.engine, checkfirst=True)
+    elif tables == 'contrib':
+        ContribState.__table__.drop(db.engine, checkfirst=True)
+        ContribDistrict.__table__.drop(db.engine, checkfirst=True)
 
 DEFAULT_FILE_NAME = 'data/weather.json'
 @manager.option('--to_json', action='store_true', dest='to_json', default=False,
