@@ -1,0 +1,66 @@
+\documentclass[11pt]{article}
+%Gummi|065|=)
+\title{\textbf{Welcome to Gummi 0.6.5}}
+\author{Alexander van der Mey\\
+		Wei-Ning Huang\\
+		Dion Timmermann}
+\date{}
+\usepackage{listings}
+\begin{document}
+
+\maketitle
+
+\section{Setup Guide}
+
+This SetupGuide is tested on Ubuntu, 
+\subsection{Prerequisites}
+
+Git
+Vagrant (Version)
+Python 3 (Version)
+miniconda -> http://conda.pydata.org/miniconda.html
+
+Switch to directory that should later contain your project-source-code
+
+Clone Repository by typing into console:
+%text{CODE: git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git}
+
+Change directory to spatial-weather
+
+\lstinline{cd spatial-weather}
+
+Install and configure the virtual machine by enter in console:
+
+\lstinline{vagrant up}
+
+While vagrant is setting up your machine you can do the following steps in the meantime:
+
+Create Environment:
+You can ignore the error-messages: 
+conda: command not found
+%bash: /bin/_conda-env-missing: No such file or directory
+
+\begin{lstlisting}
+~/miniconda3/bin/conda create --file requirements.conda -n spatial-weather python=3
+source ~/miniconda3/bin/activate spatial-weather
+
+pip install -r requirements.txt
+pip3 install -r requirements.txt
+
+\end{lstlisting}
+Neues Paket hinzufügen / installieren:
+gucken ob es das bei conda gibt, sonst via pip
+mit conda / pip installieren
+requirements updaten:
+\begin{lstlisting}
+    conda list -e > requirements.conda
+    pip freeze > requirements.txt
+\end{lstlisting}
+Env updaten:
+\begin{lstlisting}
+pip install -r requirements.txt
+~/miniconda3/bin/conda install --file requirements.conda [-n spatial-weather]
+\end{lstlisting}
+
+
+\end{document}
