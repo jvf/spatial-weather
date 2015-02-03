@@ -2,7 +2,8 @@ from flask.ext.script import Manager
 from webapp import app
 from importer.osm_importer import run as osm_import
 from importer.dwd_importer import import_dwd_db, import_dwd_json, import_dwd_from_json
-from models.map import Osm_Admin, Osm_Places, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict 
+from models.map import Osm_Admin, Osm_Places, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict, \
+    GFSImport, GFS
 from webapp import db
 import os
 import sys
@@ -18,8 +19,7 @@ manager = Manager(app)
 @manager.option('--drop_tables', action='store_true', dest='drop_tables', default=False,
                 help="drop the osm_admin and osm_places tables from the imposm import")
 def import_osm(imposm, load, drop_tables):
-    "import data osm map data from pbf file"
-    # print("imposm: %s. load: %s" % (imposm, load))
+    """import data osm map data from pbf file"""
     osm_import(imposm, load, drop_tables)
 
 
@@ -67,6 +67,7 @@ def import_dwd(to_json, load_from_json, file=DEFAULT_FILE_NAME):
 
 @manager.command
 def calculate_contrib_area():
+    db.create_all()
     ContribState.fill()
     ContribDistrict.fill()
 
