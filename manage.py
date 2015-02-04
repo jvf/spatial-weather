@@ -2,7 +2,8 @@ from flask.ext.script import Manager
 from webapp import app
 from importer.osm_importer import run as osm_import
 from importer.dwd_importer import import_dwd_db, import_dwd_json, import_dwd_from_json
-from models.map import Osm_Admin, Osm_Places, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict 
+from models.map import Osm_Admin, Osm_Places, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict, \
+    GFSImport, GFS
 from webapp import db
 import os
 import sys
@@ -18,14 +19,14 @@ manager = Manager(app)
 @manager.option('--drop_tables', action='store_true', dest='drop_tables', default=False,
                 help="drop the osm_admin and osm_places tables from the imposm import")
 def import_osm(imposm, load, drop_tables):
-    "import data osm map data from pbf file"
-    # print("imposm: %s. load: %s" % (imposm, load))
+    """import data osm map data from pbf file"""
     osm_import(imposm, load, drop_tables)
 
 
-@manager.option('-t', '--tables', dest='tables', help="osm, map, dwd, gfs", required=True)
+@manager.option('-t', '--tables', dest='tables', help="osm, map, dwd, gfs, contrib", required=True)
 def drop_tables(tables):
-    """"drop the tables for osm (osm_admin, osm_places), map (country, state, district, cities) or dwd (station, observation)"""
+    """"drop the tables for osm (osm_admin, osm_places), map (country, state, district, cities),
+    dwd (station, observation) or contrib (contrib_state, contrib_district)"""
 
     if tables == 'osm':
         Osm_Admin.__table__.drop(db.engine, checkfirst=True)
@@ -41,7 +42,12 @@ def drop_tables(tables):
         db.session.commit()
         Observation.__table__.drop(db.engine, checkfirst=True)
         Station.__table__.drop(db.engine, checkfirst=True)
-
+    elif tables == 'gfs':
+        GFSImport.__table__.drop(db.engine, checkfirst=True)
+        GFSImport.__table__.drop(db.engine, checkfirst=True)
+    elif tables == 'contrib':
+        ContribState.__table__.drop(db.engine, checkfirst=True)
+        ContribDistrict.__table__.drop(db.engine, checkfirst=True)
 
 DEFAULT_FILE_NAME = 'data/weather.json'
 @manager.option('--to_json', action='store_true', dest='to_json', default=False,
@@ -67,6 +73,7 @@ def import_dwd(to_json, load_from_json, file=DEFAULT_FILE_NAME):
 
 @manager.command
 def calculate_contrib_area():
+    db.create_all()
     ContribState.fill()
     ContribDistrict.fill()
 
