@@ -99,7 +99,7 @@ usage: run_gfs.py download [-h] [--hours_start HOURS_START]
 
 For example, assuming data should be stored to `data/forecasts`:
 
-`./run_gfs.py 2014121112 2015011306 download data/forecasts`
+`./run_gfs.py download 2014121112 2015011306 data/forecasts`
 
 ## Import
 To import the downloaded data, the download directory and a data range has to be specified: 
