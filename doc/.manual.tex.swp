@@ -5,20 +5,19 @@
 		Wei-Ning Huang\\
 		Dion Timmermann}
 \date{}
-\usepackage{listings}
 \begin{document}
 
 \maketitle
 
 \section{Setup Guide}
+\subsection{Clone Repository}
 
-This SetupGuide is tested on Ubuntu, 
-\subsection{Prerequisites}
-
+Prerequesities:
 Git
 Vagrant (Version)
 Python 3 (Version)
-miniconda -> http://conda.pydata.org/miniconda.html
+miniconda
+sudo apt-get install gdal-bin postgis
 
 Switch to directory that should later contain your project-source-code
 
@@ -27,40 +26,58 @@ Clone Repository by typing into console:
 
 Change directory to spatial-weather
 
-\lstinline{cd spatial-weather}
+CODE: cd spatial-weather
 
 Install and configure the virtual machine by enter in console:
 
-\lstinline{vagrant up}
+CODE: vagrant up
 
-While vagrant is setting up your machine you can do the following steps in the meantime:
+miniconda setup (aus mail)
 
-Create Environment:
-You can ignore the error-messages: 
-conda: command not found
-%bash: /bin/_conda-env-missing: No such file or directory
+--conda install --file requirements.conda
+\\
 
-\begin{lstlisting}
-~/miniconda3/bin/conda create --file requirements.conda -n spatial-weather python=3
+muss jedes mal ausgeführt werden nachdem der server gestartet wurde.
+
+activates Python virtual environment.
+
 source ~/miniconda3/bin/activate spatial-weather
 
-pip install -r requirements.txt
-pip3 install -r requirements.txt
+installs database-driver for python3:
 
-\end{lstlisting}
-Neues Paket hinzufügen / installieren:
-gucken ob es das bei conda gibt, sonst via pip
-mit conda / pip installieren
-requirements updaten:
-\begin{lstlisting}
-    conda list -e > requirements.conda
-    pip freeze > requirements.txt
-\end{lstlisting}
-Env updaten:
-\begin{lstlisting}
+sudo apt-get install python3-psycopg2 libpq-dev python3-dev
+
+installs additional requirements for python:
+
+-- requirements.txt
+
 pip install -r requirements.txt
-~/miniconda3/bin/conda install --file requirements.conda [-n spatial-weather]
-\end{lstlisting}
+
+
+Create database and Postgis extesions:
+
+%vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
+%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+
+create subfolder /data and copy gfs-data to that folder
+
+%./run_gfs.py import data/ <startdate> <enddate>
+
+Download http://download.geofabrik.de/europe/germany-latest.osm.pbf and save to data/ folder. (last access: 05.02.15)
+
+Import OSM-data:
+
+
+
+
+
+Start Webapp-Server:
+
+python manage.py runserver
+
+import (aus wiki)
+
+
 
 
 \end{document}

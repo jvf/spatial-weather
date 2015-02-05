@@ -17,6 +17,7 @@ Git
 Vagrant (Version)
 Python 3 (Version)
 miniconda
+sudo apt-get install gdal-bin postgis
 
 Switch to directory that should later contain your project-source-code
 
@@ -30,6 +31,53 @@ CODE: cd spatial-weather
 Install and configure the virtual machine by enter in console:
 
 CODE: vagrant up
+
+miniconda setup (aus mail)
+
+--conda install --file requirements.conda
+\\
+
+muss jedes mal ausgeführt werden nachdem der server gestartet wurde.
+
+activates Python virtual environment.
+
+source ~/miniconda3/bin/activate spatial-weather
+
+installs database-driver for python3:
+
+sudo apt-get install python3-psycopg2 libpq-dev python3-dev
+
+installs additional requirements for python:
+
+-- requirements.txt
+
+pip install -r requirements.txt
+
+
+Create database and Postgis extesions:
+
+%vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
+%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+
+create subfolder /data and copy gfs-data to that folder
+
+%./run_gfs.py import data/ <startdate> <enddate>
+
+Download http://download.geofabrik.de/europe/germany-latest.osm.pbf and save to data/ folder. (last access: 05.02.15)
+
+Import OSM-data:
+
+
+
+
+
+Start Webapp-Server:
+
+python manage.py runserver
+
+import (aus wiki)
+
+
 
 
 \end{document}
