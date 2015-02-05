@@ -82,11 +82,28 @@ DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib ython man
 ```
 
 # Download and Import NOAA GFS Data (Forecasts)
+Importing the Forecast Data is done in two steps. First you have to download the GRIB files from the NOAA FTP servers. Then you have to import them as Postgis Raster.
+
+## Download
+For downloading the GFS data a date range and a target directory has to be specified. The format for the start and enddate is `YYYYMMDDHH` or `latest` for the most recently available GFS calculation.
+Optionally the forecast hours can be specified as a range (Defaults to download from 0 to 129 in 3 hour steps).
+
+```
+usage: run_gfs.py download [-h] [--hours_start HOURS_START]
+                           [--hours_stop HOURS_STOP] [--hours_step HOURS_STEP]
+                           [startdate] [enddate] datadir
+```
+
+For example, assuming data should be stored to `data/forecasts`:
+
+`./run_gfs.py 2014121112 2015011306 download data/forecasts`
 
 ## Import
-Import the the downloaded data (lots of folders with names representing the datetime of the forecast) with: 
+To import the downloaded data, the download directory and a data range has to be specified: 
 
-`./run_gfs.py import <folder> <from_datetime> <to_datetime>`
+```
+usage: run_gfs.py import [-h] datadir [startdate] [enddate]
+```
 
 For example, assuming the data is stored in `data/forecasts`:
 
