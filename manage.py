@@ -2,7 +2,7 @@ from flask.ext.script import Manager
 from webapp import app
 from importer.osm_importer import run as osm_import
 from importer.dwd_importer import import_dwd_db, import_dwd_json, import_dwd_from_json
-from models.map import Osm_Admin, Osm_Places, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict, \
+from models.map import Osm_Admin, Station, Observation, Country, State, District, Cities, ContribState, ContribDistrict, \
     GFSImport, GFS
 from webapp import db
 import os

@@ -2,7 +2,7 @@ import os
 import subprocess
 from sqlalchemy import func
 from webapp import app, db
-from models.map import Osm_Admin, Osm_Places, Country, State, District, Cities
+from models.map import Osm_Admin, Country, State, District, Cities
 
 
 # assumes an existing db 'spatial' with postgis extension
