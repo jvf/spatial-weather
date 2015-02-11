@@ -25,7 +25,10 @@ from these tables.
 
 ## Usage
 
-To import all the OSM data use the manage script. To invoke the whole pipeline use the following command:
+Prerequisite: No contrib tables, delete if existing:
+	python manage.py drop_tables -t contrib
+
+To import all the OSM data use the manage script. To invoke the whole pipeline use the following command (will take several hours):
 
 `python manage.py import_osm --imposm --simplify --load --drop_tables`
 
@@ -36,17 +39,6 @@ To import all the OSM data use the manage script. To invoke the whole pipeline u
     
 All the above steps can be invoked separately.
 
-DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib python manage.py drop_tables -t osm
-
-## Import and Simplify 
-
-`python manage.py import_osm --imposm`
-
-run simplification script
-
-(make sure no contrib tables exist) 
-
-`python manage.py import_osm --load` 
 
 ## Mac OS X
 ```
