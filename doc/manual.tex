@@ -58,6 +58,7 @@ Create database and Postgis extesions:
 
 %vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
 %vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp;\""
 
 create subfolder /data and copy gfs-data to that folder
 
