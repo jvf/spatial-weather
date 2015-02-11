@@ -27,15 +27,26 @@ from these tables.
 
 To import all the OSM data use the manage script. To invoke the whole pipeline use the following command:
 
-`python manage.py import_osm --imposm --load --drop_tables `
+`python manage.py import_osm --imposm --simplify --load --drop_tables`
 
 * `--imposm` the first import step (see above)
+* `--simplify` simplify all map data (borders)
 * `--load` the second import step (see above)
 * `--drop-tables` deletes the Osm_Admin and Osm_Places tables after a successful import
     
 All the above steps can be invoked separately.
 
 DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib python manage.py drop_tables -t osm
+
+## Import and Simplify 
+
+`python manage.py import_osm --imposm`
+
+run simplification script
+
+(make sure no contrib tables exist) 
+
+`python manage.py import_osm --load` 
 
 ## Mac OS X
 ```

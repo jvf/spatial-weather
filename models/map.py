@@ -13,19 +13,7 @@ class Osm_Admin(db.Model):
     type = Column(String)
     admin_level = Column(Integer)
     population = Column(Integer)
-    geometry = Column(Geometry(geometry_type='GEOMETRY', srid=3857))
-
-
-class Osm_Places(db.Model):
-    __tablename__ = 'osm_places'
-    id = Column(Integer, primary_key=True)
-    osm_id = Column(BigInteger)
-    name = Column(String)
-    type = Column(String)
-    z_order = Column(Integer)
-    population = Column(Integer)
-    geometry = Column(Geometry(geometry_type='POINT', srid=3857))
-
+    geometry = Column(Geometry(geometry_type='GEOMETRY', srid=4326))
 
 class Country(db.Model):
     __tablename__ = 'country'

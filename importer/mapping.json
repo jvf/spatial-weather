@@ -39,60 +39,6 @@
                     "administrative"
                 ]
             }
-        },
-        "places": {
-            "fields": [
-                {
-                    "type": "id",
-                    "name": "osm_id",
-                    "key": null
-                },
-                {
-                    "type": "geometry",
-                    "name": "geometry",
-                    "key": null
-                },
-                {
-                    "type": "string",
-                    "name": "name",
-                    "key": "name"
-                },
-                {
-                    "type": "mapping_value",
-                    "name": "type",
-                    "key": null
-                },
-                {
-                    "args": {
-                        "ranks": [
-                            "country",
-                            "state",
-                            "region",
-                            "county",
-                            "city",
-                            "town",
-                            "village",
-                            "hamlet",
-                            "suburb",
-                            "locality"
-                        ]
-                    },
-                    "type": "zorder",
-                    "name": "z_order",
-                    "key": "z_order"
-                },
-                {
-                    "type": "integer",
-                    "name": "population",
-                    "key": "population"
-                }
-            ],
-            "type": "point",
-            "mapping": {
-                "place": [
-                    "city"
-                ]
-            }
         }
     }
 }

@@ -14,13 +14,15 @@ manager = Manager(app)
 
 @manager.option('--imposm', action='store_true', dest='imposm', default=False,
                 help="import data with imposm3 from pfb file")
+@manager.option('--simplify', action='store_true', dest='simplify', default=False,
+                help="simplify all polygons while preserving topology")
 @manager.option('--load', action='store_true', dest='load', default=False,
                 help="create map tables for the app from the tables created by imposm")
 @manager.option('--drop_tables', action='store_true', dest='drop_tables', default=False,
                 help="drop the osm_admin and osm_places tables from the imposm import")
-def import_osm(imposm, load, drop_tables):
+def import_osm(imposm, simplify, load, drop_tables):
     """import data osm map data from pbf file"""
-    osm_import(imposm, load, drop_tables)
+    osm_import(imposm, simplify, load, drop_tables)
 
 
 @manager.option('-t', '--tables', dest='tables', help="osm, map, dwd, gfs, contrib", required=True)
