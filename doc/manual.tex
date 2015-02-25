@@ -137,6 +137,11 @@ vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_topology;\"" 
 \end{lstlisting}
 \subsection{Import Data}
+
+%vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
+%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;\""
+
 create subfolder /data and copy gfs-data to that folder
 \begin{lstlisting}
 ./run_gfs.py import data/ <startdate> <enddate>

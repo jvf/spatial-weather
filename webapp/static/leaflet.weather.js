@@ -219,6 +219,11 @@ L.Control.weather = L.Control.extend({
             className: "popup-loading"
         }, layer);
 
+        if (this._config.forecast) {
+          return;
+        }
+
+
         layer.bindPopup(popup);
 
         layer.on({
@@ -416,10 +421,8 @@ L.Control.weather = L.Control.extend({
             value: "2015-01-11 00:00",
             minDate: "2014/11/11",
             maxDate: "2015/01/11",
-
             format: this._dateFormat,
 
-            maxDate: 0,
             closeOnDateSelect: true,
 
             step: 60,
