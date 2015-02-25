@@ -1,83 +1,161 @@
-\documentclass[11pt]{article}
-%Gummi|065|=)
-\title{\textbf{Welcome to Gummi 0.6.5}}
-\author{Alexander van der Mey\\
-		Wei-Ning Huang\\
-		Dion Timmermann}
-\date{}
+\documentclass[paper=a4, fontsize=11pt]{scrartcl} % A4 paper and 11pt font size
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage{fourier} % Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[ngerman,british,UKenglish,USenglish,american]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amsthm} % Math packages
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{todonotes}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\definecolor{grey}{rgb}{0.4, 0.4, 0.4}
+
+%\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[R]{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+%farbige Hyperlinks
+%\definecolor{refcolor}{rgb}{0,.2,.4}
+%schwarze Hyperlinks
+\definecolor{refcolor}{rgb}{0,0,0}
+%Hyperref Color
+\hypersetup{pdftex=true, colorlinks=true, breaklinks=true, linkcolor=refcolor, menucolor=refcolor, pagecolor=refcolor, citecolor=refcolor, urlcolor=refcolor}
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{\includegraphics[width=0.6\textwidth]{pictures/logo} \\ [5pt] Arbeitsgruppe Datenbanken und Informationssysteme \\ [20pt] \includegraphics[width=0.15\textwidth]{pictures/DBIS_Logo_rgb_web.png}} \\ [10pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Spatial Databases: Project Documentation \\ % The assignment title
+\normalsize \textsc{Setup-Guide and Documentation for Spatial-Weather-Project} \\ [0.4cm]
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+\newcommand*{\justifyheading}{\raggedright}
+\titleformat{\subsection}{\large\justifyheading}{\thesubsection}{1em}{}
+
+\author{Johannes Dillmann (matr-nr) \\ Christian Wirth (4498611) \\ Jens Fischer (matr-nr)}
+
+\date{\normalsize\today} % Today's date or a custom date
 \begin{document}
 
+\begin{titlepage}
+\pagenumbering{Roman}
 \maketitle
+\thispagestyle{empty}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+
+\newpage
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\setcounter{page}{1}
 
 \section{Setup Guide}
-\subsection{Clone Repository}
+\subsection{Prerequisites}
 
-Prerequesities:
+The Following Packages or Programs need to be installed before you proceed with this setup-guide:\\
 Git
-Vagrant (Version)
-Python 3 (Version)
+Vagrant
+Python 3
+PostGIS
 miniconda
-sudo apt-get install gdal-bin postgis
 
-Switch to directory that should later contain your project-source-code
+\begin{lstlisting}
+sudo apt-get install gdal-bin postgis git 
+\end{lstlisting}
+
+\subsection{Step-by-step Setup}
+Now switch to directory that should later contain your project-source-code
 
 Clone Repository by typing into console:
-%text{CODE: git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git}
+\begin{lstlisting}
+git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git
+\end{lstlisting}
 
 Change directory to spatial-weather
-
-CODE: cd spatial-weather
+\begin{lstlisting}
+cd spatial-weather
+\end{lstlisting}
 
 Install and configure the virtual machine by enter in console:
-
-CODE: vagrant up
-
+\begin{lstlisting}
+vagrant up
+\end{lstlisting}
 miniconda setup (aus mail)
-
+\todo[inline]{TDOD} 
 --conda install --file requirements.conda
-\\
 
-muss jedes mal ausgeführt werden nachdem der server gestartet wurde.
-
-activates Python virtual environment.
-
+This command has to be executed every time the server has been started in order to activate the Python virtual environment.
+\begin{lstlisting}
 source ~/miniconda3/bin/activate spatial-weather
+\end{lstlisting}
 
-installs database-driver for python3:
-
+install database-driver for python3:
+\begin{lstlisting}
 sudo apt-get install python3-psycopg2 libpq-dev python3-dev
+\end{lstlisting}
 
-installs additional requirements for python:
-
--- requirements.txt
-
+install additional requirements for python:\\
+(take a look at requirements.txt for further details.)
+\todo[inline]{TDOD}
+\begin{lstlisting}
 pip install -r requirements.txt
-
+\end{lstlisting}
 
 Create database and Postgis extesions:
-
-%vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
-%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
-%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp;\""
-
+\begin{lstlisting}
+vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp
+LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
+vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis;
+CREATE EXTENSION postgis_topology;\"" 
+\end{lstlisting}
+\subsection{Import Data}
 create subfolder /data and copy gfs-data to that folder
-
-%./run_gfs.py import data/ <startdate> <enddate>
-
+\begin{lstlisting}
+./run_gfs.py import data/ <startdate> <enddate>
+\end{lstlisting}
 Download http://download.geofabrik.de/europe/germany-latest.osm.pbf and save to data/ folder. (last access: 05.02.15)
 
 Import OSM-data:
 
-
-
-
+\todo[inline]{TODO}
 
 Start Webapp-Server:
-
+\begin{lstlisting}
 python manage.py runserver
+\end{lstlisting}
 
-import (aus wiki)
+\todo[inline]{TODO: import (aus wiki)}
+copy %germany_borders.geojson to data\ folder
 
+run: %python manage.py import_dwd
 
 
 
