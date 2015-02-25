@@ -1,3 +1,5 @@
 .vagrant/
 data/*
 *.pyc
+*.swp
+*~
