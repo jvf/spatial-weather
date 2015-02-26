@@ -91,7 +91,28 @@
 \section{Data Sources}
 	- kurze Beschreibung der drei Datenquellen
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
-	
+
+\subsection{Global Forecast System (GFS)}
+We use data from the Global Forecast System (GFS) in our application for weather 
+forecasts. The GFS is a weather forecast model computed and freely distributed
+by the National Oceanic and Atmospheric Administration (NOAA) of the United States.
+
+
+The GFS model is calculated every 6h hours and covers the entire globe at a resolution 
+of 28 kilometers for weather predictions within 16 days. Furthermore it provides
+forecats for up to two weeks, but with a lower resolution of 70 kilometers. 
+\todo[inline]{Vielleicht  noch auflisten was die alles haben}
+
+
+The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB) 
+from the NOAA servers. They provide among other access methods like FTP services, 
+a simple \href{http://nomads.ncep.noaa.gov/txt_descriptions/grib_filter_doc.shtml}{webinterface}
+to extract certain levels and variables for a subregion.
+
+
+Because we are only interested in the temperature and rainfall forecasts for 
+Germany, we are using that interface download the GRIB data
+
 \section{Data Model}
 \subsection{Entity Relationship Diagram (ERD) }
   \begin{figure}[htbp]
@@ -119,14 +140,14 @@
 
   ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
 
-
+  ~\\
   The relational schema is following Kemper, Eickler (2009): Datenbanksysteme 7. Aufl. 
   \todo[inline]{Bibtex quelle einfügen}
   The schema is not identical to the schema used in the actual PostgreSQL DB where for example 
   additional fields used solely for the import are still remaining. The presented
   schema is given for illustrating conceptual ideas. 
-
-
+  
+  ~\\
   As can be seen in the relational schema there are no foreign keys or junction tables
   used to reference the relation between countries, states, districts and stations. 
   Those entities are related by their spatial component and will be joined by using
