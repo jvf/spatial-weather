@@ -63,33 +63,64 @@
 \begin{document}
 
 \begin{titlepage}
-\pagenumbering{Roman}
+\pagenumbering{alph}
 \maketitle
 \thispagestyle{empty}
 \end{titlepage}
 
 \newpage
 \tableofcontents
-\thispagestyle{empty}
+%\thispagestyle{empty}
 
 \newpage
 \pagenumbering{arabic}
 \pagestyle{fancy}
 \setcounter{page}{1}
 
+\section{Introduction}
+	\subsection{Topic}
+	\subsection{Motivation}
+	\subsection{Goal}
+\section{Data Sources}
+	- kurze Beschreibung der drei Datenquellen
+	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
+\section{Data Model}
+	- ER Modell plus 2-3 Sätze
+\section{Architecture}
+	- Bild + Beschreibung
+\section{Optimizations}
+	- Indices
+	- Contrib Tables
+	- Topology Simplification
+\section{Usage}
+	- kurze Beschreibung was wir Anzeigen können
+	- Screenshots (da sind sie glaub ich geil drauf)
+\section{Conclusion}
+	- lessons learned
+
 \section{Setup Guide}
 \subsection{Prerequisites}
 
-The Following Packages or Programs need to be installed before you proceed with this setup-guide:\\
-Git
-Vagrant
-Python 3
-PostGIS
-miniconda
+The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
 
 \begin{lstlisting}
-sudo apt-get install gdal-bin postgis git 
+sudo apt-get install gdal-bin postgis git vagrant python
 \end{lstlisting}
+\todo[inline]{check packages}
+
+It is strongly advised to install scipy, numpy and shapely (globaly) as
+binary packages and not through virtualenv, because of their large
+number of non-python dependencies. E.g. on Debian/Ubuntu systems use
+\begin{lstlisting}
+sudo apt-get install python3-numpy python3-scipy python3-shapely}
+\end{lstlisting}
+to install. Make sure access to the global packages is activated in the
+virtual environment\\(e.g.~through \texttt{toggleglobalsitepackages} in
+\texttt{virtualenvwrapper}).
+
+When compiling entirely from source, You also might need to install the
+following libraries: (for shapely): libgeos-dev; (for scipy):
+libblas-dev, liblapack-dev, gfortran.
 
 \subsection{Step-by-step Setup}
 Now switch to directory that should later contain your project-source-code
@@ -104,12 +135,15 @@ Change directory to spatial-weather
 cd spatial-weather
 \end{lstlisting}
 
-Install and configure the virtual machine by enter in console:
+Install and configure the virtual machine by entering in console:
 \begin{lstlisting}
 vagrant up
 \end{lstlisting}
-miniconda setup (aus mail)
-\todo[inline]{TDOD} 
+
+You can open a new console and proceed with the following steps on your local machine:\\
+Install miniconda from the website:\\
+http://conda.pydata.org/miniconda.html
+
 --conda install --file requirements.conda
 
 This command has to be executed every time the server has been started in order to activate the Python virtual environment.
@@ -129,39 +163,264 @@ install additional requirements for python:\\
 pip install -r requirements.txt
 \end{lstlisting}
 
+These steps will only work once the Virtual Machine has been successfully provisioned.\\
 Create database and Postgis extesions:
-\begin{lstlisting}
-vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp
-LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
-vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis;
-CREATE EXTENSION postgis_topology;\"" 
+\begin{lstlisting}[breaklines=true]
+vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
+vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;\""
 \end{lstlisting}
+
 \subsection{Import Data}
 
-%vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial  OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
-%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
-%vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;\""
+\subsubsection{Import OSM Data}\label{import-osm-data}
 
-create subfolder /data and copy gfs-data to that folder
-\begin{lstlisting}
-./run_gfs.py import data/ <startdate> <enddate>
+Imports the OSM data for Germany. The following tables are created:
+Country, State, District and Cities. The data is imported from
+\texttt{germany-latest.osm.pbf}, obtained from\\
+\href{http://download.geofabrik.de/europe/germany-latest.osm.pbf}{http://download.geofabrik.de/europe/germany-latest.osm.pbf}.
+\todo[inline]{Quelle: (last access: 05.02.15)} The pbf file needs to be
+placed in \texttt{data/} located in your Project-Folder.
+
+The importer used is \texttt{imposm3}, which is included in the vagrant
+setup (and will be executed within the VM). The import\\uses a custom
+mapping, which is provided in \texttt{importer/mapping.json}. The import
+is conducted in two steps: First, the\\data is imported to the tables
+Osm\_Admin and Osm\_Places. Second the Country, State, District and
+Cities tables are created\\from these tables.
+
+\subsubsection{Usage}\label{usage}
+
+Prerequisite: No contrib tables, delete if existing:\\ python manage.py
+drop\_tables -t contrib
+
+To import all the OSM data use the manage script. To invoke the whole
+pipeline use the following command (will take several hours):
+
+\texttt{python\ manage.py\ import\_osm\ -\/-imposm\ -\/-simplify\ -\/-load\ -\/-drop\_tables}
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \texttt{-\/-imposm} the first import step (see above)
+\item
+  \texttt{-\/-simplify} simplify all map data (borders)
+\item
+  \texttt{-\/-load} the second import step (see above)
+\item
+  \texttt{-\/-drop-tables} deletes the Osm\_Admin and Osm\_Places tables
+  after a successful import
+\end{itemize}
+
+All the above steps can be invoked separately.
+
+\subsubsection{Mac OS X}\label{mac-os-x}
+
+\begin{lstlisting}[breaklines=true]
+python manage.py import_osm --drop_tables --imposm --load
+DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib python manage.py import_osm --drop_tables --load
 \end{lstlisting}
-Download http://download.geofabrik.de/europe/germany-latest.osm.pbf and save to data/ folder. (last access: 05.02.15)
 
-Import OSM-data:
+\subsection{Import DWD Data}\label{import-dwd-data}
+
+Imports weather observation data from the DWD (Deutscher Wetterdienst).
+The importer is a adopted version
+from \href{https://github.com/cholin/fuberlin_spatial_db_project}{cholin}.
+\todo[inline]{Quelle}
+Per default, it downloads all the {[}recent daily
+observations{]}\\(\url{ftp://ftp.dwd.de/pub/CDC/observations_germany/climate/daily/kl}).
+
+Details on the importer from
+\href{https://github.com/cholin/fuberlin_spatial_db_project/blob/master/scripts/dwd/README.md}{cholin}:
+\todo[inline]{Quelle}
+
+\begin{quote}
+The importer downloads the station summary file to get a list of all
+weather stations. After that it downloads for each\\station the
+corresponding zip file (with measurement data), extracts it in-memory
+and parses it. To get information about\\which weather station is the
+nearest for a given point, it also calculates a region polygon for each
+station. This is done\\by computing the voronoi diagram for all
+stations. The resulting regions may be outside of the country germany.
+To avoid\\this there is a polygon of the border of germany (data is from
+naturalearthdata.com - country extraction and exportation\\as geojson
+with qgis). For each region we calculate the intersection with this
+polygon and use the result as final region\\(Multi)Polygon.
+\end{quote}
+
+\subsubsection{Usage}\label{usage-1}
+
+Use the importer with the \texttt{manage.py} script:
+
+To download all data and import all observation data:
+
+\texttt{python\ manage.py\ import\_dwd}
+
+Create an intermediate result in \texttt{data/weather.json}:
+
+\texttt{python\ manage.py\ import\_dwd\ -\/-to\_json}
+
+Import the intermediate result from \texttt{data/weather.json}:
+
+\texttt{python\ manage.py\ import\_dwd\ -\/-from\_json}
+
+\subsubsection{Mac OS X}\label{mac-os-x-1}
+
+\begin{lstlisting}[breaklines=true]
+python manage.py import_dwd --to_json
+DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib ython manage.py import_dwd --from_json
+\end{lstlisting}
+
+\subsection{Download and Import NOAA GFS Data
+(Forecasts)}\label{download-and-import-noaa-gfs-data-forecasts}
+
+Importing the Forecast Data is done in two steps. First you have to
+download the GRIB files from the NOAA FTP servers. Then you have to
+import them as Postgis Raster.
+
+\subsubsection{Download}\label{download}
+
+For downloading the GFS data a date range and a target directory has to
+be specified. The format for the start and enddate is
+\texttt{YYYYMMDDHH} or \texttt{latest} for the most recently available
+GFS calculation.\\Optionally the forecast hours can be specified as a
+range (Defaults to download from 0 to 129 in 3 hour steps).
+
+\begin{verbatim}
+usage: run_gfs.py download [-h] [--hours_start HOURS_START]
+                           [--hours_stop HOURS_STOP] [--hours_step HOURS_STEP]
+                           [startdate] [enddate] datadir
+\end{verbatim}
+
+For example, assuming data should be stored to \texttt{data/forecasts}:
+
+\texttt{./run\_gfs.py\ download\ 2014121112\ 2015011306\ data/forecasts}
+
+\subsubsection{Import}\label{import}
+
+To import the downloaded data, the download directory and a data range
+has to be specified:
+
+\begin{verbatim}
+usage: run_gfs.py import [-h] datadir [startdate] [enddate]
+\end{verbatim}
+
+For example, assuming the data is stored in \texttt{data/forecasts}:
+
+\texttt{./run\_gfs.py\ import\ data/forecasts\ 2014121112\ 2015011306}
+
+\subsubsection{Build Contrib Tables}\label{build-contrib-tables}
+
+To speed up some queries, the area contribution of the region (voronoi
+cell) of weather stations to states and districts is precomputed and
+materialized. Run \texttt{python\ manage.py\ calculate\_contrib\_area}
+to create and fill the ContribState and ContribDistrict tables.
+
+\subsubsection{Troubleshooting}\label{troubleshooting}
+\subsubsection*{Mac OS X}\label{mac-os-x-2}
+
+\subsubsection*{UnicodeEncodeError}\label{unicodeencodeerror}
+
+Python inherits the standard locale from the current shell environment.
+If this is not set to utf8 it tries to convert to ASCII, which
+produces.\\
+\texttt{UnicodeEncodeError:\ \textquotesingle{}ascii\textquotesingle{}\ codec\ can\textquotesingle{}t\ encode\ character}\\Test
+with \texttt{\$\ locale}, this should show utf-8. If not, fix with
+\begin{verbatim}
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+\end{verbatim}
+
+\subsubsection*{libssl / libcrypto Error from
+psycopq}\label{libssl-libcrypto-error-from-psycopq}
+
+The \texttt{libssl} version Mac OS X uses might be too old for
+\texttt{psycopg}, resulting in an error like the following:
+
+\begin{lstlisting}[breaklines=true]
+...
+ImportError: dlopen(...lib/python3.4/site-packages/psycopg2/_psycopg.so, 2): Library not loaded: libssl.1.0.0.dylib
+  Referenced from: ...lib/python3.4/site-packages/psycopg2/_psycopg.so
+  Reason: image not found
+\end{lstlisting}
+
+This can be solved by changing the dynamic shared library install names
+in the \texttt{psycopq} binary. First, find out the version
+\texttt{psycopq} is using:
+
+\begin{lstlisting}[breaklines=true]
+otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+$ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so:
+    /usr/local/lib/libpq.5.dylib (compatibility version 5.0.0, current version 5.6.0)
+    libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+    libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1213.0.0)
+    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 283.0.0)
+\end{lstlisting}
+
+Now, change the the shared libraries for \texttt{libssl} and
+\texttt{libcrypto} (using the libraries provided by
+\href{http://postgresapp.com}{Postgres.app}):
+
+\begin{lstlisting}[breaklines=true]
+install_name_tool -change libssl.1.0.0.dylib /Applications/Postgres.app/Contents/Versions/9.3/lib/libssl.1.0.0.dylib /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+install_name_tool -change libcrypto.1.0.0.dylib /Applications/Postgres.app/Contents/Versions/9.3/lib/libcrypto.1.0.0.dylib /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+\end{lstlisting}
+
+\texttt{psycopq} now uses the correct libraries:
+
+\begin{lstlisting}[breaklines=true]
+otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so                                                                                                                                                   
+$ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so:
+    /usr/local/lib/libpq.5.dylib (compatibility version 5.0.0, current version 5.6.0)
+    /Applications/Postgres.app/Contents/Versions/9.3/lib/libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+    /Applications/Postgres.app/Contents/Versions/9.3/lib/libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1213.0.0)
+    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 283.0.0)
+\end{lstlisting}
+
+It is strongly recommended to do all this in an virtual environment to
+not mess up your system!
+
+Source: More Information:
+\href{http://superuser.com/a/721564}{superuser.com}
+
+Another possibilty is to prefix commands with
+\texttt{DYLD\_LIBRARY\_PATH} and \texttt{DYLD\_FRAMEWORK\_PATH}, but
+this works less reliable and potentially messes up the linking of other
+libraries. Example:
+
+\begin{lstlisting}[breaklines=true]
+DYLD_LIBRARY_PATH=$(HOME)/lib:/usr/local/lib:/lib:/usr/lib:/Applications/Postgres.app/Contents/Versions/9.3/lib,DYLD_FRAMEWORK_PATH=/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks python manage.py import_dwd
+\end{lstlisting}
+
+providing an alternative path for a newer version of \texttt{libssl} to
+the dynamic linker (in this example the libs from
+\href{http://postgresapp.com}{Postgres.app} are used, but can link
+against a \texttt{homebrew} installed version as well):
+
+\begin{lstlisting}[breaklines=true]
+export DYLD_LIBRARY_PATH=$(HOME)/lib:/usr/local/lib:/lib:/usr/lib:/Applications/Postgres.app/Contents/Versions/9.3/lib
+export DYLD_FRAMEWORK_PATH=/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks
+\end{lstlisting}
+
+Source:
+\href{http://stackoverflow.com/questions/11365619/psycopg2-installation-error-library-not-loaded-libssl-dylib}{stackoverflow.com}
 
 \todo[inline]{TODO}
 
 Start Webapp-Server:
+Remember to set the virtual environment first if you restarted the Virtual Machine.
+\begin{lstlisting}
+source ~/miniconda3/bin/activate spatial-weather
+\end{lstlisting}
+Then you can run the Webserver:
 \begin{lstlisting}
 python manage.py runserver
 \end{lstlisting}
 
-\todo[inline]{TODO: import (aus wiki)}
-copy %germany_borders.geojson to data\ folder
-
-run: %python manage.py import_dwd
-
-
+\section{Appendix}
+\todo [inline] {Literature (if any)}
+\subsection{Link to Repository}
 
 \end{document}
