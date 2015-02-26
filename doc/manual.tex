@@ -12,6 +12,7 @@
 \usepackage{todonotes}
 \usepackage{titlesec}
 \usepackage{xcolor}
+\usepackage{ulem}
 \definecolor{grey}{rgb}{0.4, 0.4, 0.4}
 
 %\usepackage{sectsty} % Allows customizing section commands
@@ -92,10 +93,48 @@
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
 	
 \section{Data Model}
-\begin{figure}[htbp]
-\includegraphics[width=1\textwidth]{pictures/ER}
-\caption{ER-Diagram}
-\end{figure}
+\subsection{Entity Relationship Diagram (ERD) }
+  \begin{figure}[htbp]
+  \includegraphics[width=1\textwidth]{pictures/er-model}
+  \caption{ER-Diagram}
+  \end{figure}
+
+  \todo[inline]{Geg. ER Model anpassen für Station Attribute}
+
+\subsection{Relational Schema}
+  
+  Country : \{{[}\uline{osm\_id: biginteger}, name: string, geom:  geometry{]}\}
+
+  State : \{{[}\uline{osm\_id: biginteger}, name: string, geom: geometry{]}\}
+
+  District : \{{[}\uline{osm\_id: biginteger}, name: string, geom: geometry{]}\}
+
+  Station : \{{[}\uline{dwd\_id: integer}, name: string, altitude: integer, geometry: point, region: geometry{]}\}
+
+  Observation : \{{[}\uline{\dashuline{station\_id: integer}, date: timestamp}, temperature: double, rainfall: double{]}\}
+
+  Forecast : \{{[}\uline{date: timestamp, hour: integer}, rast: raster{]}\}
+
+  ContribState : \{{[}\uline{\dashuline{state\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
+
+  ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
+
+
+  The relational schema is following Kemper, Eickler (2009): Datenbanksysteme 7. Aufl. 
+  \todo[inline]{Bibtex quelle einfügen}
+  The schema is not identical to the schema used in the actual PostgreSQL DB where for example 
+  additional fields used solely for the import are still remaining. The presented
+  schema is given for illustrating conceptual ideas. 
+
+
+  As can be seen in the relational schema there are no foreign keys or junction tables
+  used to reference the relation between countries, states, districts and stations. 
+  Those entities are related by their spatial component and will be joined by using
+  spatial joins provided by the PostGIS extension. 
+
+
+
+
 
 \section{Architecture}
 \begin{figure}[htbp]
