@@ -85,7 +85,7 @@
 	- kurze Beschreibung der drei Datenquellen
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
 \section{Data Model}
-	- ER Modell plus 2-3 Sätze
+\includegraphics[width=1.1\textwidth]{pictures/ER}
 \section{Architecture}
 	- Bild + Beschreibung
 \section{Optimizations}
@@ -171,9 +171,7 @@ vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; 
 vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;\""
 \end{lstlisting}
 
-\subsection{Import Data}
-
-\subsubsection{Import OSM Data}\label{import-osm-data}
+\subsection{Import OSM Data}\label{import-osm-data}
 
 Imports the OSM data for Germany. The following tables are created:
 Country, State, District and Cities. The data is imported from
@@ -221,7 +219,7 @@ python manage.py import_osm --drop_tables --imposm --load
 DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib python manage.py import_osm --drop_tables --load
 \end{lstlisting}
 
-\subsection{Import DWD Data}\label{import-dwd-data}
+\subsection{Import DWD Data (Historical)}\label{import-dwd-data}
 
 Imports weather observation data from the DWD (Deutscher Wetterdienst).
 The importer is a adopted version
