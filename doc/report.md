@@ -30,8 +30,8 @@ supported.
 
 By default Leaflet is using a zoom and a layer selection control. Instead of
 rendering the basetiles ourselves, we are using the freely available 
-[OSM Title Server](http://wiki.openstreetmap.org/wiki/Tile_usage_policy)
-and titles generated for free by [Mapbox](https://www.mapbox.com/). 
+[OSM Tile Server](http://wiki.openstreetmap.org/wiki/Tile_usage_policy)
+and tiles generated for free by [Mapbox](https://www.mapbox.com/). 
 The desired basetile layer can be selected as seen in fig. ?? 
 
 ![Layer Selection](pictures/screenshot-baselayer.png)
