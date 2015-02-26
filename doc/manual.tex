@@ -21,8 +21,8 @@
 \pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
 \fancyhead[R]{} % No page header - if you want one, create it in the same way as the footers below
 \fancyfoot[L]{} % Empty left footer
-\fancyfoot[C]{} % Empty center footer
-\fancyfoot[R]{\thepage} % Page numbering for right footer
+\fancyfoot[C]{\thepage} % Page numbering for center footer
+\fancyfoot[R]{} % Empty right footer
 \renewcommand{\headrulewidth}{0pt} % Remove header underlines
 \renewcommand{\footrulewidth}{0pt} % Remove footer underlines
 \setlength{\headheight}{13.6pt} % Customize the height of the header
@@ -63,14 +63,20 @@
 \begin{document}
 
 \begin{titlepage}
-\pagenumbering{alph}
+\pagenumbering{Roman}
 \maketitle
 \thispagestyle{empty}
 \end{titlepage}
 
 \newpage
+\setcounter{page}{1}
+\addcontentsline{toc}{section}{\protect\numberline{}{Table of Contents}}
 \tableofcontents
 %\thispagestyle{empty}
+
+\newpage
+\listoffigures
+\addcontentsline{toc}{section}{\protect\numberline{}{Table of Figures}}
 
 \newpage
 \pagenumbering{arabic}
@@ -84,10 +90,19 @@
 \section{Data Sources}
 	- kurze Beschreibung der drei Datenquellen
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
+	
 \section{Data Model}
+\begin{figure}[htbp]
 \includegraphics[width=1.1\textwidth]{pictures/ER}
+\caption{ER-Diagram}
+\end{figure}
+
 \section{Architecture}
-	- Bild + Beschreibung
+\begin{figure}[htbp]
+\includegraphics[width=1.1\textwidth]{pictures/Architektur.png}
+\caption{Architecture}
+\end{figure}
+
 \section{Optimizations}
 	- Indices
 	- Contrib Tables
