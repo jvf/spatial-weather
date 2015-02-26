@@ -93,15 +93,16 @@
 	
 \section{Data Model}
 \begin{figure}[htbp]
-\includegraphics[width=1.1\textwidth]{pictures/ER}
+\includegraphics[width=1\textwidth]{pictures/ER}
 \caption{ER-Diagram}
 \end{figure}
 
 \section{Architecture}
 \begin{figure}[htbp]
-\includegraphics[width=1.1\textwidth]{pictures/Architektur.png}
+\includegraphics[width=1\textwidth]{pictures/Architektur.png}
 \caption{Architecture}
 \end{figure}
+\todo[inline]{Schreibfehler korrigieren}
 
 \section{Optimizations}
 	- Indices
@@ -121,33 +122,38 @@ available
 \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile
 Server} and tiles generated for free by
 \href{https://www.mapbox.com/}{Mapbox}. The desired basetile layer can
-be selected as seen in fig. ??
+be selected as seen in fig. \ref{fig:layer-selection}
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-baselayer.png}
 \caption{Layer Selection}
+\label{fig:layer-selection}
 \end{figure}
 
+\newpage
 The map can also be panned and zoomed by using a pointing device
 (e.g.~mouse).
 
 The displayed weather data can be set by an additional control as seen
-in fig. ??
+in fig. \ref{fig:weather-control}
 \todo[inline]{Link and add Figures in Paragraph to "Abbildungsverzeichnis"}
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-control.png}
 \caption{Weather Control}
+\label{fig:weather-control}
 \end{figure}
 
+\newpage
 It allows to choose either temperatures or reciprocal rainfall for a
 certain day. The day can be selected with an interactive date-time picker
-as seen in fig. ??
+as seen in fig. \ref{fig:date-time-picker}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-control-datetime.png}
 \caption{Date-time Picker}
+\label{fig:date-time-picker}
 \end{figure}
 
 The selected date and time is also used to pick the computed GFS used to
@@ -155,9 +161,10 @@ display forecasts. If the forecast box is checked, the forecasts slider
 is activated and allows to select point of forecast in hours, starting
 from the chosen date and time.
 
+\newpage
 As mentioned before, the data can be displayed for different rasters: a
 voronoi tessellation based on official weather stations, german states or
-districts. The desired raster can be selected with the control. Once the
+districts as shown in fig. \ref{fig:raster-comparison}. The desired raster can be selected with the control. Once the
 selection did change, the weather control is loading the matching data
 from the backend via a JSON interface and displays the raster on the
 map.
@@ -166,32 +173,37 @@ map.
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-raster.png}
 \caption{Raster comparison}
+\label{fig:raster-comparison}
 \end{figure}
 
 The cells are colored according to selected data and a legend is shown
-on the lower right for reference (see fig. ?? - ??)
+on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{pictures/screenshot-legend-temp.png}
+\includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-temp.png}
 \caption{Temperature Legend}
+\label{fig:temperature-legend}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{pictures/screenshot-legend-rain.png}
+\includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-rain.png}
 \caption{Rainfall Legend}
+\label{fig:rainfall-legend}
 \end{figure}
 
+\newpage
 Each cell is clickable and highlights it's border or, in case of the
 voronoi tessellation, the position of the weather station. Furthermore a
-pop-up is shown, which is showing additional data associated to the
+pop-up as in fig. \ref{fig:popup} is shown, which provides additional data associated to the
 selected cell by calling the backends JSON interface.
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-popup.png}
-\caption{Popup}
+\caption{Pop-up}
+\label{fig:popup}
 \end{figure}
 
 Currently this is just the alphanumerical attributes, but could be used
