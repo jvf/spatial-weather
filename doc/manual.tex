@@ -85,9 +85,16 @@
 
 \section{Introduction}
 	\subsection{Topic}
+	The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS.
 	\subsection{Motivation}
+	The motivation of this project can be seen from a educational as well as from a technical point of view.\\
+	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he lives university and has to deal with real world problems.\\
+	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
 	\subsection{Goal}
-\section{Data Sources}
+	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather-data. In order to achieve this Goal several technical Problems have to be solved, like designing a Data-Model, a suitable System-Architecture as well as setting up and configuring the whole System.
+	
+\newpage
+\section{Data Sources}\label{sec:datasources}
 	- kurze Beschreibung der drei Datenquellen
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
 	
@@ -97,12 +104,25 @@
 \caption{ER-Diagram}
 \end{figure}
 
+\newpage
 \section{Architecture}
+The Architecture as shown in fig. \ref{fig:architecture} consist of 4 major parts:\\
+The data-sources and their corresponding downloaders and importers, the PostGIS-Server, running in a virtual machine, the backend and a webapp. In the following four subsections \ref{subsec:dsai} to \ref{subsec:webapp} I'll explain how those components are working together and what parts they are made of as well as which technologies have been used to implement them.
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/Architektur.png}
 \caption{Architecture}
+\label{fig:architecture}
 \end{figure}
 \todo[inline]{Schreibfehler korrigieren}
+
+\subsection{Data Sources and Importer}\label{subsec:dsai}
+The three data-sources used in this project are \todo[inline]{add 3 sources} and have been discussed in section \ref{sec:datasources} very detailed. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
+\subsection{Server}
+The server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGis along with other required packages and configures most of the things needed for the server to be ready to be used.
+\subsection{Backend}
+The backend runs Flask, a model-view-controller-based framework. This framework contains methods to invoke data-collection and data-import as well as an ORM based on SQL-Alchemy and GEO-Alchemy to send queries to the database to retrieve data requested by the user via the Frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the Frontend.
+\subsection{Webapp (Frontend)}\label{subsec:webapp}
+The Frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a User Interface which is described in detail in section \ref{usage}. To display the weather- and OSM-data the library Leaflet is used. The Frontend receives the requested data from the backend in JSON.
 
 \section{Optimizations}
 	- Indices
@@ -110,7 +130,7 @@
 	- Topology Simplification
 \section{Usage}\label{usage}
 
-As mentioned in the Architecure section, the weather map is displayed
+As mentioned in the architecture section, the weather map is displayed
 with HTML5 and controlled with JavaScript. It has been developed as a
 control for the Leaflet library and tested on Google Chrome and
 Chromium. Other browsers are not officially supported.
@@ -126,7 +146,7 @@ be selected as seen in fig. \ref{fig:layer-selection}
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-baselayer.png}
-\caption{Layer Selection}
+\caption{Layer selection}
 \label{fig:layer-selection}
 \end{figure}
 
@@ -136,11 +156,10 @@ The map can also be panned and zoomed by using a pointing device
 
 The displayed weather data can be set by an additional control as seen
 in fig. \ref{fig:weather-control}
-\todo[inline]{Link and add Figures in Paragraph to "Abbildungsverzeichnis"}
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-control.png}
-\caption{Weather Control}
+\caption{Weather control}
 \label{fig:weather-control}
 \end{figure}
 
@@ -152,7 +171,7 @@ as seen in fig. \ref{fig:date-time-picker}
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-control-datetime.png}
-\caption{Date-time Picker}
+\caption{Date-time picker}
 \label{fig:date-time-picker}
 \end{figure}
 
@@ -182,14 +201,14 @@ on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-temp.png}
-\caption{Temperature Legend}
+\caption{Temperature legend}
 \label{fig:temperature-legend}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-rain.png}
-\caption{Rainfall Legend}
+\caption{Rainfall legend}
 \label{fig:rainfall-legend}
 \end{figure}
 
@@ -208,7 +227,7 @@ selected cell by calling the backends JSON interface.
 
 Currently this is just the alphanumerical attributes, but could be used
 to show automatically generated temperature timelines or recent webcam
-photos or \ldots{} {[}\textbf{TODO: noch mehr ausblick kram\ldots{}}{]}
+photos or \ldots{}\todo [inline]{noch mehr ausblick kram\ldots}
 
 \section{Conclusion}
 	- lessons learned
@@ -216,6 +235,7 @@ photos or \ldots{} {[}\textbf{TODO: noch mehr ausblick kram\ldots{}}{]}
 \section{Setup Guide}
 \subsection{Prerequisites}
 
+This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
 The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
 
 \begin{lstlisting}
