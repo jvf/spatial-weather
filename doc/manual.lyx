@@ -1,0 +1,4693 @@
+#LyX file created by tex2lyx 2.1
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass scrartcl
+\begin_preamble
+% A4 paper and 11pt font size
+% Use 8-bit encoding that has 256 glyphs
+% Use the Adobe Utopia font for the document - comment this line to return to the LaTeX default
+\usepackage[ngerman,british,UKenglish,USenglish,american]{babel}
+\usepackage{amsfonts}\usepackage{amsthm}% Math packages
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{todonotes}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\definecolor{grey}{rgb}{0.4, 0.4, 0.4}
+
+%\usepackage{sectsty} % Allows customizing section commands
+%\allsectionsfont{\centering \normalfont\scshape} % Make all sections centered, the default font and small caps
+
+\usepackage{fancyhdr}% Custom headers and footers
+ % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[R]{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{\thepage} % Page numbering for center footer
+\fancyfoot[R]{} % Empty right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+%farbige Hyperlinks
+%\definecolor{refcolor}{rgb}{0,.2,.4}
+%schwarze Hyperlinks
+\definecolor{refcolor}{rgb}{0,0,0}
+%Hyperref Color
+
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+ % Removes all indentation from paragraphs - comment this line for an assignment with lots of text
+% Code Listing Style
+\definecolor{darkblue}{rgb}{0,0,.6}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\lstset{
+	basicstyle=\ttfamily,
+	commentstyle=\color{darkgreen},
+	keywordstyle=\color{darkblue}\fontseries{sb}\fontshape{n}\selectfont,
+	stringstyle=\color{darkred},
+%	identifierstyle=\color{darkgreen},
+%    moredelim=[is][\underbar]{_}{_},
+	breaklines=true,
+	tabsize=2,
+%	xleftmargin=-1mm,
+%	xrightmargin=3mm,
+%	aboveskip=\smallskipamount,
+%	belowskip=\smallskipamount,
+	numbers=left,
+	frame=none,
+	showstringspaces=false,
+	captionpos=t,
+%	framexbottommargin=3pt,
+%	framextopmargin=3pt,
+	% Umlaute
+	literate=%
+		{Ö}{{\"O}}1
+		{Ä}{{\"A}}1
+		{Ü}{{\"U}}1
+		{ß}{{\ss}}2
+		{ü}{{\"u}}1
+		{ä}{{\"a}}1
+		{ö}{{\"o}}1
+}
+
+% BibLaTeX
+%\usepackage[style=authoryear]{biblatex}
+\usepackage[style=numeric]{biblatex}
+\bibliography{bibliography}
+
+% \AtEveryBibitem{\clearlist{language}} % clears language
+% \AtEveryBibitem{\clearfield{note}}    % clears notes
+% \AtEveryBibitem{\clearfield{doi}} % clears doi
+% \AtEveryBibitem{\clearfield{isbn}} % clears doi
+% \AtEveryBibitem{\clearfield{issn}} % clears doi
+% \addbibresource{bibliography.bib} % Syntax for version >= 1.2
+
+
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+\normalfont \normalsize 
+\textsc{\includegraphics[width=0.6\textwidth]{pictures/logo} \\ [5pt] Arbeitsgruppe Datenbanken und Informationssysteme \\ [20pt] \includegraphics[width=0.15\textwidth]{pictures/DBIS_Logo_rgb_web.png}} \\ [10pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge Spatial Databases: Project Documentation \\ % The assignment title
+\normalsize \textsc{Setup-Guide and Documentation for Spatial-Weather-Project} \\ [0.4cm]
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+\newcommand*{\justifyheading}{\raggedright}
+\titleformat{\subsection}{\large\justifyheading}{\thesubsection}{1em}{}
+
+\author{Johannes Dillmann (matr-nr) \\ Christian Wirth (4498611) \\ Jens Fischer (3923671)}
+
+\date{\normalsize\today} % Today's date or a custom date
+
+\end_preamble
+\options paper=a4,fontsize=11pt
+\use_default_options false
+\maintain_unincluded_children false
+\language american
+\language_package default
+\inputencoding utf8
+\fontencoding T1
+\font_roman utopia
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks 0
+\pdf_bookmarksnumbered 0
+\pdf_bookmarksopen 0
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks 1
+\pdf_pdfborder 0
+\pdf_colorlinks 1
+\pdf_backref section
+\pdf_pdfusetitle 0
+\pdf_quoted_options "pdftex=true,linkcolor=refcolor,menucolor=refcolor,pagecolor=refcolor,citecolor=refcolor,urlcolor=refcolor"
+\papersize default
+\use_geometry false
+\use_package amsmath 2
+\use_package amssymb 0
+\use_package cancel 0
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 0
+\use_package mhchem 0
+\use_package stackrel 0
+\use_package stmaryrd 0
+\use_package undertilde 0
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancyplain
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+begin{titlepage}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+pagenumbering{Roman}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+maketitle
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+end{titlepage}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+setcounter{page}{1}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+addcontentsline{toc}{section}{
+\backslash
+protect
+\backslash
+numberline{}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Table of Contents
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+addcontentsline{toc}{section}{
+\backslash
+protect
+\backslash
+numberline{}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Table of Figures
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+pagenumbering{arabic}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+pagestyle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+fancy
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+setcounter{page}{1}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Introduction
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Topic
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS. 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Motivation
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The motivation of this project can be seen from a educational as well as from a technical point of view.
+\begin_inset Newline newline
+\end_inset
+
+ The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+%	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+% zu Anti-Uni, das findet Voisard nicht gut
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Goal
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Data Sources
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:datasources"
+
+\end_inset
+
+ - kurze Beschreibung der drei Datenquellen - vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Global Forecast System (GFS)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+We use data from the Global Forecast System (GFS) in our application for weather forecasts. The GFS is a weather forecast model computed and freely distributed by the National Oceanic and Atmospheric Administration (NOAA) of the United States.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The GFS model is calculated every 6h hours and covers the entire globe at a resolution of 28 kilometers for weather predictions within 16 days. Furthermore it provides forecast up to two weeks with a lower resolution of 70 kilometers. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Vielleicht noch auflisten was die alles haben
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB) from the NOAA servers. They provide among other access methods like FTP services, a simple 
+\begin_inset CommandInset href
+LatexCommand href
+name "webinterface"
+target "http://nomads.ncep.noaa.gov/txt_descriptions/grib_filter_doc.shtml"
+
+\end_inset
+
+to extract certain levels and variables for a subregion.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Because we are only interested in the temperature and rainfall forecasts for Germany, we are using that interface to download the GRIB data.
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Data Model
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Entity Relationship Diagram (ERD) 
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Graphics 
+	filename pictures/er-model.jpg
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+ER-Diagram
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Geg. ER Model anpassen für Station Attribute
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Relational Schema
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Country : {[
+\bar under
+osm_id: biginteger
+\bar default
+, name: string, geom: geometry]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+State : {[
+\bar under
+osm_id: biginteger
+\bar default
+, name: string, geom: geometry]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+District : {[
+\bar under
+osm_id: biginteger
+\bar default
+, name: string, geom: geometry]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Station : {[
+\bar under
+dwd_id: integer
+\bar default
+, name: string, altitude: integer, geometry: point, region: geometry]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Observation : {[
+\bar under
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+dashuline
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+station_id: integer
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+, date: timestamp
+\bar default
+, temperature: double, rainfall: double]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Forecast : {[
+\bar under
+date: timestamp, hour: integer
+\bar default
+, rast: raster]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+ContribState : {[
+\bar under
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+dashuline
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+state_id: biginteger
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+dashuline
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+station_id: integer
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\bar default
+, area: double]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+ContribDistrict : {[
+\bar under
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+dashuline
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+district_id: biginteger
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+dashuline
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+station_id: integer
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\bar default
+, area: double]}
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+ The relational schema is following Kemper and Eickler 
+\begin_inset CommandInset citation
+LatexCommand cite
+after ""
+key "DBLP:books/ol/KemperE09"
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Fix bibtex zeug
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset space ~
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+ As can be seen in the relational schema there are no foreign keys or junction tables used to reference the relation between countries, states, districts and stations. Those entities are related by their spatial component and will be joined by using spatial joins provided by the PostGIS extension.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Architecture
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The architecture as shown in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:architecture"
+
+\end_inset
+
+ consist of 4 major parts:
+\begin_inset Newline newline
+\end_inset
+
+ The data sources and their corresponding downloaders and importers, the PostGIS-Server, running in a virtual machine, the backend and a webapp. In the following four subsections 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:dsai"
+
+\end_inset
+
+ to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:webapp"
+
+\end_inset
+
+ it will be explained how those components work together and what parts they are made of as well as which technologies have been used to implement them. 
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Graphics 
+	filename pictures/Architektur.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Architecture
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:architecture"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Schreibfehler korrigieren
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Data Sources and Importer
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:dsai"
+
+\end_inset
+
+ The three data-sources used in this project are 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+add 3 sources
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ and have been discussed in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:datasources"
+
+\end_inset
+
+ very detailed. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:datasources"
+
+\end_inset
+
+ and the setup-guide at subsections 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "import-osm-data"
+
+\end_inset
+
+ to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "download-and-import-noaa-gfs-data-forecasts"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Database Server
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGis along with other required packages and configures most of the things needed for the server to be used. 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Backend
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The backend runs Flask, a model-view-controller-based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend. 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Webapp (Frontend)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:webapp"
+
+\end_inset
+
+ The frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a user interface which is described in detail in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "usage"
+
+\end_inset
+
+. To display the weather and OSM data the library Leaflet is used. The frontend receives the requested data from the backend in (Geo)JSON.
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Optimisations
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Indices
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Indices were used on all primary keys, all geometry columns and some frequently queried attributes, like dates. All indices were used from the beginning, so no information on the performance gains is available.
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Materialised Computations
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done 
+\emph on
+within
+\emph default
+ one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (
+\begin_inset listings
+inline true
+status collapsed
+
+\begin_layout Plain Layout
+Contrib_State}, 
+\backslash
+lstinline
+\end_layout
+
+\end_inset
+
+ContribDistrict
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+), which brought down the query time significantly.
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Border Simplifications
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+When profiling the application further, we noticed that the huge amount of detail of the country, state and district borders seriously affected the performance, not only in terms of querying but also the sheer amount of data transmitted from the server to the client.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Initially, after the import from Open Street Maps, all the country, state and district geometry columns had a combined size of 38 MiB. In an attempt to further improve performance we wanted to simplify the geometries, especially as they were only used for querying and overlaying the respective regions, not for the rendering of the map itself.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. Postgis provides the function 
+\begin_inset listings
+inline true
+status collapsed
+
+\begin_layout Plain Layout
+ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, 
+\backslash
+lstinline
+\end_layout
+
+\end_inset
+
+STSimplifyPreserveTopology
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Source Ref to http://strk.keybit.net/blog/2012/04/13/simplifying-a-map-layer-using-postgis-topology/
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+. The complete Script can be found in the Apendix. Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "borders_full"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "borders_simple"
+
+\end_inset
+
+ compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. To total combined size of the geometry columns after the simplification was 895 KiB!
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/borders_full.jpg
+	width 95text%
+	clip
+	special trim
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Full Borders Berlin-Brandenburg
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "borders_full"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/borders_simplified.jpg
+	width 95text%
+	clip
+	special trim
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Simplified Borders Berlin-Brandenburg
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "borders_simple"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "simplification_table"
+
+\end_inset
+
+ summarises the performance gains for the most intensive query we perform. As you can see, the simplification achieved significant performance improvements.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/simplification_table.pdf
+	width 110text%
+	clip
+	special trim
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Performance Gains From the Simplification
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "simplification_table"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Usage
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "usage"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+As mentioned in the architecture section, the weather map is displayed with HTML5 and controlled with JavaScript. It has been developed as a control for the Leaflet library and tested on Google Chrome and Chromium. Other browsers are not officially supported.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+By default Leaflet is using a zoom and a layer selection control. Instead of rendering the base tiles ourselves, we are using the freely available 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Sources
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "OSM Tile Server"
+target "http://wiki.openstreetmap.org/wiki/Tile_usage_policy"
+
+\end_inset
+
+and tiles generated for free by 
+\begin_inset CommandInset href
+LatexCommand href
+name "Mapbox"
+target "https://www.mapbox.com/"
+
+\end_inset
+
+. The desired basetile layer can be selected as seen in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:layer-selection"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Graphics 
+	filename pictures/screenshot-baselayer.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Layer selection
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:layer-selection"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+The map can also be panned and zoomed by using a pointing device (e.g.
+\begin_inset space ~
+
+\end_inset
+
+mouse).
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The displayed weather data can be set by an additional control as seen in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:weather-control"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Graphics 
+	filename pictures/screenshot-control.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Weather control
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:weather-control"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+It allows to choose either temperatures or reciprocal rainfall for a certain day. The day can be selected with an interactive date-time picker as seen in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:date-time-picker"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/screenshot-control-datetime.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Date-time picker
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:date-time-picker"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The selected date and time is also used to pick the computed GFS used to display forecasts. If the forecast box is checked, the forecasts slider is activated and allows to select point of forecast in hours, starting from the chosen date and time.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+As mentioned before, the data can be displayed for different rasters: a voronoi tessellation based on official weather stations, german states or districts as shown in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:raster-comparison"
+
+\end_inset
+
+. The desired raster can be selected with the control. Once the selection did change, the weather control is loading the matching data from the backend via a JSON interface and displays the raster on the map.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/screenshot-raster.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Raster comparison
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:raster-comparison"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The cells are colored according to selected data and a legend is shown on the lower right for reference (see fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:temperature-legend"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:rainfall-legend"
+
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/screenshot-legend-temp.png
+	width 50text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Temperature legend
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:temperature-legend"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/screenshot-legend-rain.png
+	width 50text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Rainfall legend
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:rainfall-legend"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Newpage newpage
+\end_inset
+
+Each cell is clickable and highlights it's border or, in case of the voronoi tessellation, the position of the weather station. Furthermore a pop-up as in fig. 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:popup"
+
+\end_inset
+
+ is shown, which provides additional data associated to the selected cell by calling the backends JSON interface.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset Float figure
+placement htbp
+wide false
+sideways false
+status open
+
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+centering
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Graphics 
+	filename pictures/screenshot-popup.png
+	width 100text%
+
+\end_inset
+
+ 
+\begin_inset Caption Standard
+
+\begin_layout Standard
+
+\lang american
+Pop-up
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:popup"
+
+\end_inset
+
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Currently this is just the alphanumerical attributes, but could be used to show automatically generated temperature timelines or recent webcam photos or \SpecialChar \ldots{}
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+ [inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+noch mehr ausblick kram\SpecialChar \ldots{}
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Conclusion
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+- lessons learned
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Setup Guide
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Prerequisites
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.
+\begin_inset Newline newline
+\end_inset
+
+ The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+sudo apt-get install gdal-bin postgis git vagrant python
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+check packages
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+It is strongly advised to install scipy, numpy and shapely (globaly) as binary packages and not through virtualenv, because of their large number of non-python dependencies. E.g. on Debian/Ubuntu systems use 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+sudo apt-get install python3-numpy python3-scipy python3-shapely
+\end_layout
+
+\end_inset
+
+to install. Make sure access to the global packages is activated in the virtual environment
+\begin_inset Newline newline
+\end_inset
+
+(e.g.
+\begin_inset space ~
+
+\end_inset
+
+through 
+\family typewriter
+toggleglobalsitepackages
+\family default
+ in 
+\family typewriter
+virtualenvwrapper
+\family default
+).
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+When compiling entirely from source, You also might need to install the following libraries: (for shapely): libgeos-dev; (for scipy): libblas-dev, liblapack-dev, gfortran.
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Step-by-step Setup
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Now switch to directory that should later contain your project-source-code
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Clone Repository by typing into console: 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Change directory to spatial-weather 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+cd spatial-weather
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Install and configure the virtual machine by entering in console: 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+vagrant up
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+You can open a new console and proceed with the following steps on your local machine:
+\begin_inset Newline newline
+\end_inset
+
+ Install miniconda from the website:
+\begin_inset Newline newline
+\end_inset
+
+ http://conda.pydata.org/miniconda.html
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+--conda install --file requirements.conda
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+This command has to be executed every time the server has been started in order to activate the Python virtual environment. 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+source ~/miniconda3/bin/activate spatial-weather
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+install database-driver for python3: 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+sudo apt-get install python3-psycopg2 libpq-dev python3-dev
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+install additional requirements for python:
+\begin_inset Newline newline
+\end_inset
+
+ (take a look at requirements.txt for further details.) 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+TDOD
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+pip install -r requirements.txt
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+These steps will only work once the Virtual Machine has been successfully provisioned.
+\begin_inset Newline newline
+\end_inset
+
+ Create database and Postgis extesions: 
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+vagrant ssh -c "sudo -u postgres psql -c 
+\backslash
+"CREATE DATABASE spatial OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';
+\backslash
+"" 
+\end_layout
+
+\begin_layout Plain Layout
+vagrant ssh -c "sudo -u postgres psql -d spatial -c 
+\backslash
+"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;
+\backslash
+"" 
+\end_layout
+
+\begin_layout Plain Layout
+vagrant ssh -c "sudo -u postgres psql -d spatial -c 
+\backslash
+"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;
+\backslash
+""
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Import OSM Data
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "import-osm-data"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Imports the OSM data for Germany. The following tables are created: Country, State, District and Cities. The data is imported from 
+\family typewriter
+germany-latest.osm.pbf
+\family default
+, obtained from
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset CommandInset href
+LatexCommand href
+target "http://download.geofabrik.de/europe/germany-latest.osm.pbf"
+
+\end_inset
+
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Quelle: (last access: 05.02.15)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ The pbf file needs to be placed in 
+\family typewriter
+data/
+\family default
+ located in your Project-Folder.
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The importer used is 
+\family typewriter
+imposm3
+\family default
+, which is included in the vagrant setup (and will be executed within the VM). The import
+\begin_inset Newline newline
+\end_inset
+
+uses a custom mapping, which is provided in 
+\family typewriter
+importer/mapping.json
+\family default
+. The import is conducted in two steps: First, the
+\begin_inset Newline newline
+\end_inset
+
+data is imported to the tables Osm_Admin and Osm_Places. Second the Country, State, District and Cities tables are created
+\begin_inset Newline newline
+\end_inset
+
+from these tables.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Usage
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "usage"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Prerequisite: No contrib tables, delete if existing:
+\begin_inset Newline newline
+\end_inset
+
+ python manage.py drop_tables -t contrib
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+To import all the OSM data use the manage script. To invoke the whole pipeline use the following command (will take several hours):
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+python
+\begin_inset space \space{}
+
+\end_inset
+
+manage.py
+\begin_inset space \space{}
+
+\end_inset
+
+import_osm
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-imposm
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-simplify
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-load
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-drop_tables
+\family default
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+itemsep
+\end_layout
+
+\end_inset
+
+1pt
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+parskip
+\end_layout
+
+\end_inset
+
+0pt
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+parsep
+\end_layout
+
+\end_inset
+
+0pt 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\lang american
+
+\family typewriter
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-imposm
+\family default
+ the first import step (see above) 
+\end_layout
+
+\begin_layout Itemize
+
+\lang american
+
+\family typewriter
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-simplify
+\family default
+ simplify all map data (borders) 
+\end_layout
+
+\begin_layout Itemize
+
+\lang american
+
+\family typewriter
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-load
+\family default
+ the second import step (see above) 
+\end_layout
+
+\begin_layout Itemize
+
+\lang american
+
+\family typewriter
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-drop-tables
+\family default
+ deletes the Osm_Admin and Osm_Places tables after a successful import 
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+All the above steps can be invoked separately.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Mac OS X
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "mac-os-x"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+python manage.py import_osm --drop_tables --imposm --load
+\end_layout
+
+\begin_layout Plain Layout
+DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib python manage.py import_osm --drop_tables --load
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Import DWD Data (Historical)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "import-dwd-data"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Imports weather observation data from the DWD (Deutscher Wetterdienst). The importer is a adopted version from 
+\begin_inset CommandInset href
+LatexCommand href
+name "cholin"
+target "https://github.com/cholin/fuberlin_spatial_db_project"
+
+\end_inset
+
+. 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Quelle
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ Per default, it downloads all the [recent daily observations]
+\begin_inset Newline newline
+\end_inset
+
+(
+\begin_inset Flex Flex:URL
+status collapsed
+
+\begin_layout Plain Layout
+ftp://ftp.dwd.de/pub/CDC/observations_germany/climate/daily/kl
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Details on the importer from 
+\begin_inset CommandInset href
+LatexCommand href
+name "cholin"
+target "https://github.com/cholin/fuberlin_spatial_db_project/blob/master/scripts/dwd/README.md"
+
+\end_inset
+
+: 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Quelle
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Quote
+
+\lang american
+The importer downloads the station summary file to get a list of all weather stations. After that it downloads for each
+\begin_inset Newline newline
+\end_inset
+
+station the corresponding zip file (with measurement data), extracts it in-memory and parses it. To get information about
+\begin_inset Newline newline
+\end_inset
+
+which weather station is the nearest for a given point, it also calculates a region polygon for each station. This is done
+\begin_inset Newline newline
+\end_inset
+
+by computing the voronoi diagram for all stations. The resulting regions may be outside of the country germany. To avoid
+\begin_inset Newline newline
+\end_inset
+
+this there is a polygon of the border of germany (data is from naturalearthdata.com - country extraction and exportation
+\begin_inset Newline newline
+\end_inset
+
+as geojson with qgis). For each region we calculate the intersection with this polygon and use the result as final region
+\begin_inset Newline newline
+\end_inset
+
+(Multi)Polygon. 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Usage
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "usage-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Use the importer with the 
+\family typewriter
+manage.py
+\family default
+ script:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+To download all data and import all observation data:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+python
+\begin_inset space \space{}
+
+\end_inset
+
+manage.py
+\begin_inset space \space{}
+
+\end_inset
+
+import_dwd
+\family default
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Create an intermediate result in 
+\family typewriter
+data/weather.json
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+python
+\begin_inset space \space{}
+
+\end_inset
+
+manage.py
+\begin_inset space \space{}
+
+\end_inset
+
+import_dwd
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-to_json
+\family default
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Import the intermediate result from 
+\family typewriter
+data/weather.json
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+python
+\begin_inset space \space{}
+
+\end_inset
+
+manage.py
+\begin_inset space \space{}
+
+\end_inset
+
+import_dwd
+\begin_inset space \space{}
+
+\end_inset
+
+-
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+/
+\end_layout
+
+\end_inset
+
+-from_json
+\family default
+
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Mac OS X
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "mac-os-x-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+python manage.py import_dwd --to_json
+\end_layout
+
+\begin_layout Plain Layout
+DYLD_LIBRARY_PATH=/Applications/Postgres.app/Contents/Versions/9.3/lib ython manage.py import_dwd --from_json
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Download and Import NOAA GFS Data (Forecasts)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "download-and-import-noaa-gfs-data-forecasts"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Importing the Forecast Data is done in two steps. First you have to download the GRIB files from the NOAA FTP servers. Then you have to import them as Postgis Raster.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Download
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "download"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+For downloading the GFS data a date range and a target directory has to be specified. The format for the start and enddate is 
+\family typewriter
+YYYYMMDDHH
+\family default
+ or 
+\family typewriter
+latest
+\family default
+ for the most recently available GFS calculation.
+\begin_inset Newline newline
+\end_inset
+
+Optionally the forecast hours can be specified as a range (Defaults to download from 0 to 129 in 3 hour steps).
+\end_layout
+
+\begin_layout Verbatim
+usage: run_gfs.py download [-h] [--hours_start HOURS_START]
+\end_layout
+
+\begin_layout Verbatim
+                           [--hours_stop HOURS_STOP] [--hours_step HOURS_STEP]
+\end_layout
+
+\begin_layout Verbatim
+                           [startdate] [enddate] datadir
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+For example, assuming data should be stored to 
+\family typewriter
+data/forecasts
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+./run_gfs.py
+\begin_inset space \space{}
+
+\end_inset
+
+download
+\begin_inset space \space{}
+
+\end_inset
+
+2014121112
+\begin_inset space \space{}
+
+\end_inset
+
+2015011306
+\begin_inset space \space{}
+
+\end_inset
+
+data/forecasts
+\family default
+
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Import
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "import"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+To import the downloaded data, the download directory and a data range has to be specified:
+\end_layout
+
+\begin_layout Verbatim
+usage: run_gfs.py import [-h] datadir [startdate] [enddate]
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+For example, assuming the data is stored in 
+\family typewriter
+data/forecasts
+\family default
+:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+./run_gfs.py
+\begin_inset space \space{}
+
+\end_inset
+
+import
+\begin_inset space \space{}
+
+\end_inset
+
+data/forecasts
+\begin_inset space \space{}
+
+\end_inset
+
+2014121112
+\begin_inset space \space{}
+
+\end_inset
+
+2015011306
+\family default
+
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Build Contrib Tables
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "build-contrib-tables"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+To speed up some queries, the area contribution of the region (voronoi cell) of weather stations to states and districts is precomputed and materialized. 
+\begin_inset Newline newline
+\end_inset
+
+ Run 
+\family typewriter
+python
+\begin_inset space \space{}
+
+\end_inset
+
+manage.py
+\begin_inset space \space{}
+
+\end_inset
+
+calculate_contrib_area
+\family default
+ to create and fill the ContribState and ContribDistrict tables.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+Troubleshooting (Mac OS X)
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "troubleshooting"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+UnicodeEncodeError
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "unicodeencodeerror"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Python inherits the standard locale from the current shell environment. If this is not set to utf8 it tries to convert to ASCII, which produces.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\family typewriter
+UnicodeEncodeError:
+\begin_inset space \space{}
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+textquotesingle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{}
+\end_layout
+
+\end_inset
+
+ascii
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+textquotesingle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{}
+\end_layout
+
+\end_inset
+
+
+\begin_inset space \space{}
+
+\end_inset
+
+codec
+\begin_inset space \space{}
+
+\end_inset
+
+can
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+textquotesingle
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{}
+\end_layout
+
+\end_inset
+
+t
+\begin_inset space \space{}
+
+\end_inset
+
+encode
+\begin_inset space \space{}
+
+\end_inset
+
+character
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+Test with 
+\family typewriter
+$
+\begin_inset space \space{}
+
+\end_inset
+
+locale
+\family default
+, this should show utf-8. If not, fix with 
+\end_layout
+
+\begin_layout Verbatim
+export LANG=en_US.UTF-8
+\end_layout
+
+\begin_layout Verbatim
+export LC_ALL=en_US.UTF-8
+\end_layout
+
+\begin_layout Subsubsection*
+
+\lang american
+libssl / libcrypto Error from psycopq
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset CommandInset label
+LatexCommand label
+name "libssl-libcrypto-error-from-psycopq"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+The 
+\family typewriter
+libssl
+\family default
+ version Mac OS X uses might be too old for 
+\family typewriter
+psycopg
+\family default
+, resulting in an error like the following:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+...
+\end_layout
+
+\begin_layout Plain Layout
+ImportError: dlopen(...lib/python3.4/site-packages/psycopg2/_psycopg.so, 2): Library not loaded: libssl.1.0.0.dylib
+\end_layout
+
+\begin_layout Plain Layout
+  Referenced from: ...lib/python3.4/site-packages/psycopg2/_psycopg.so
+\end_layout
+
+\begin_layout Plain Layout
+  Reason: image not found
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+This can be solved by changing the dynamic shared library install names in the 
+\family typewriter
+psycopq
+\family default
+ binary. First, find out the version 
+\family typewriter
+psycopq
+\family default
+ is using:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+\end_layout
+
+\begin_layout Plain Layout
+$ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so:
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/local/lib/libpq.5.dylib (compatibility version 5.0.0, current version 5.6.0)
+\end_layout
+
+\begin_layout Plain Layout
+    libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1213.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 283.0.0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Now, change the the shared libraries for 
+\family typewriter
+libssl
+\family default
+ and 
+\family typewriter
+libcrypto
+\family default
+ (using the libraries provided by 
+\begin_inset CommandInset href
+LatexCommand href
+name "Postgres.app"
+target "http://postgresapp.com"
+
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+install_name_tool -change libssl.1.0.0.dylib /Applications/Postgres.app/Contents/Versions/9.3/lib/libssl.1.0.0.dylib /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+\end_layout
+
+\begin_layout Plain Layout
+install_name_tool -change libcrypto.1.0.0.dylib /Applications/Postgres.app/Contents/Versions/9.3/lib/libcrypto.1.0.0.dylib /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\family typewriter
+psycopq
+\family default
+ now uses the correct libraries:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so                                                                                                                                                   
+\end_layout
+
+\begin_layout Plain Layout
+$ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so:
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/local/lib/libpq.5.dylib (compatibility version 5.0.0, current version 5.6.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /Applications/Postgres.app/Contents/Versions/9.3/lib/libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /Applications/Postgres.app/Contents/Versions/9.3/lib/libcrypto.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1213.0.0)
+\end_layout
+
+\begin_layout Plain Layout
+    /usr/lib/libgcc_s.1.dylib (compatibility version 1.0.0, current version 283.0.0)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+It is strongly recommended to do all this in an virtual environment to not mess up your system!
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Source: More Information: 
+\begin_inset CommandInset href
+LatexCommand href
+name "superuser.com"
+target "http://superuser.com/a/721564"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Another possibilty is to prefix commands with 
+\family typewriter
+DYLD_LIBRARY_PATH
+\family default
+ and 
+\family typewriter
+DYLD_FRAMEWORK_PATH
+\family default
+, but this works less reliable and potentially messes up the linking of other libraries. Example:
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+DYLD_LIBRARY_PATH=$(HOME)/lib:/usr/local/lib:/lib:/usr/lib:/Applications/Postgres.app/Contents/Versions/9.3/lib,DYLD_FRAMEWORK_PATH=/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks python manage.py import_dwd
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+providing an alternative path for a newer version of 
+\family typewriter
+libssl
+\family default
+ to the dynamic linker (in this example the libs from 
+\begin_inset CommandInset href
+LatexCommand href
+name "Postgres.app"
+target "http://postgresapp.com"
+
+\end_inset
+
+are used, but can link against a 
+\family typewriter
+homebrew
+\family default
+ installed version as well):
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "breaklines=true"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+export DYLD_LIBRARY_PATH=$(HOME)/lib:/usr/local/lib:/lib:/usr/lib:/Applications/Postgres.app/Contents/Versions/9.3/lib
+\end_layout
+
+\begin_layout Plain Layout
+export DYLD_FRAMEWORK_PATH=/Library/Frameworks:/Network/Library/Frameworks:/System/Library/Frameworks
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Source: 
+\begin_inset CommandInset href
+LatexCommand href
+name "stackoverflow.com"
+target "http://stackoverflow.com/questions/11365619/psycopg2-installation-error-library-not-loaded-libssl-dylib"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+[inline]
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+TODO
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Start Webapp-Server
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+Remember to set the virtual environment first if you restarted the Virtual Machine. 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+source ~/miniconda3/bin/activate spatial-weather
+\end_layout
+
+\end_inset
+
+Then you can run the Webserver: 
+\begin_inset listings
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+python manage.py runserver
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+
+\lang american
+Appendix
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+todo
+\end_layout
+
+\end_inset
+
+ [inline] 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+Literature (if any)
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Link to Repository
+\end_layout
+
+\begin_layout Subsection
+
+\lang american
+Border Simplification Script
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "simplifycation_script"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset listings
+lstparams "language=sql"
+inline false
+status collapsed
+
+\begin_layout Plain Layout
+-- Delete all unneeded admin levels
+\end_layout
+
+\begin_layout Plain Layout
+DELETE FROM osm_admin
+\end_layout
+
+\begin_layout Plain Layout
+  WHERE admin_level != 2 AND
+\end_layout
+
+\begin_layout Plain Layout
+    admin_level != 4 AND
+\end_layout
+
+\begin_layout Plain Layout
+    admin_level != 6 AND
+\end_layout
+
+\begin_layout Plain Layout
+    admin_level != 9
+\end_layout
+
+\begin_layout Plain Layout
+;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Delete all unneeded rows with admin level 9 (keep only rows of admin level 9 contained in the states hamburg and berlin)
+\end_layout
+
+\begin_layout Plain Layout
+WITH
+\end_layout
+
+\begin_layout Plain Layout
+berlin AS
+\end_layout
+
+\begin_layout Plain Layout
+(
+\end_layout
+
+\begin_layout Plain Layout
+    SELECT geometry
+\end_layout
+
+\begin_layout Plain Layout
+    FROM osm_admin
+\end_layout
+
+\begin_layout Plain Layout
+    WHERE admin_level = 4 AND name = 'Berlin'
+\end_layout
+
+\begin_layout Plain Layout
+),
+\end_layout
+
+\begin_layout Plain Layout
+hamburg AS
+\end_layout
+
+\begin_layout Plain Layout
+(
+\end_layout
+
+\begin_layout Plain Layout
+    SELECT geometry
+\end_layout
+
+\begin_layout Plain Layout
+    FROM osm_admin
+\end_layout
+
+\begin_layout Plain Layout
+    WHERE admin_level = 4 AND name = 'Hamburg'
+\end_layout
+
+\begin_layout Plain Layout
+),
+\end_layout
+
+\begin_layout Plain Layout
+quarter AS
+\end_layout
+
+\begin_layout Plain Layout
+(
+\end_layout
+
+\begin_layout Plain Layout
+    SELECT a.id, a.osm_id, a.name, a.type, a.admin_level, a.population, a.geometry
+\end_layout
+
+\begin_layout Plain Layout
+    FROM osm_admin a, berlin b, hamburg h
+\end_layout
+
+\begin_layout Plain Layout
+    WHERE a.admin_level = 9 AND ST_Contains(ST_Union(b.geometry, h.geometry), a.geometry)
+\end_layout
+
+\begin_layout Plain Layout
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+DELETE FROM osm_admin
+\end_layout
+
+\begin_layout Plain Layout
+WHERE admin_level = 9 AND id NOT IN (SELECT id FROM quarter);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Change Projection
+\end_layout
+
+\begin_layout Plain Layout
+ALTER TABLE osm_admin ALTER COLUMN geometry TYPE geometry(Geometry);
+\end_layout
+
+\begin_layout Plain Layout
+UPDATE osm_admin SET geometry = ST_Transform(geometry, 4326);
+\end_layout
+
+\begin_layout Plain Layout
+ALTER TABLE osm_admin ALTER COLUMN geometry TYPE geometry(Geometry, 4326);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Install SimplifyEdgeGeom function
+\end_layout
+
+\begin_layout Plain Layout
+CREATE OR REPLACE FUNCTION SimplifyEdgeGeom(atopo varchar, anedge int, maxtolerance float8)
+\end_layout
+
+\begin_layout Plain Layout
+RETURNS float8 AS $$
+\end_layout
+
+\begin_layout Plain Layout
+DECLARE
+\end_layout
+
+\begin_layout Plain Layout
+  tol float8;
+\end_layout
+
+\begin_layout Plain Layout
+  sql varchar;
+\end_layout
+
+\begin_layout Plain Layout
+BEGIN
+\end_layout
+
+\begin_layout Plain Layout
+  tol := maxtolerance;
+\end_layout
+
+\begin_layout Plain Layout
+  LOOP
+\end_layout
+
+\begin_layout Plain Layout
+    sql := 'SELECT topology.ST_ChangeEdgeGeom(' || quote_literal(atopo) || ', ' || anedge
+\end_layout
+
+\begin_layout Plain Layout
+      || ', ST_Simplify(geom, ' || tol || ')) FROM '
+\end_layout
+
+\begin_layout Plain Layout
+      || quote_ident(atopo) || '.edge WHERE edge_id = ' || anedge;
+\end_layout
+
+\begin_layout Plain Layout
+    BEGIN
+\end_layout
+
+\begin_layout Plain Layout
+      RAISE DEBUG 'Running %', sql;
+\end_layout
+
+\begin_layout Plain Layout
+      EXECUTE sql;
+\end_layout
+
+\begin_layout Plain Layout
+      RETURN tol;
+\end_layout
+
+\begin_layout Plain Layout
+    EXCEPTION
+\end_layout
+
+\begin_layout Plain Layout
+     WHEN OTHERS THEN
+\end_layout
+
+\begin_layout Plain Layout
+      RAISE WARNING 'Simplification of edge % with tolerance % failed: %', anedge, tol, SQLERRM;
+\end_layout
+
+\begin_layout Plain Layout
+      tol := round( (tol/2.0) * 1e8 ) / 1e8; -- round to get to zero quicker
+\end_layout
+
+\begin_layout Plain Layout
+      IF tol = 0 THEN RAISE EXCEPTION '%', SQLERRM; END IF;
+\end_layout
+
+\begin_layout Plain Layout
+    END;
+\end_layout
+
+\begin_layout Plain Layout
+  END LOOP;
+\end_layout
+
+\begin_layout Plain Layout
+END
+\end_layout
+
+\begin_layout Plain Layout
+$$ LANGUAGE 'plpgsql' STABLE STRICT;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Create a topology
+\end_layout
+
+\begin_layout Plain Layout
+SELECT topology.CreateTopology('osm_admin_topo', find_srid('public', 'osm_admin', 'geometry'));
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Add a layer
+\end_layout
+
+\begin_layout Plain Layout
+SELECT AddTopoGeometryColumn('osm_admin_topo', 'public', 'osm_admin', 'topogeom', 'MULTIPOLYGON');
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Populate the layer and the topology
+\end_layout
+
+\begin_layout Plain Layout
+UPDATE osm_admin SET topogeom = toTopoGeom(geometry, 'osm_admin_topo', 1);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Simplify all edges up to 0.01 units
+\end_layout
+
+\begin_layout Plain Layout
+SELECT SimplifyEdgeGeom('osm_admin_topo', edge_id, 0.01) FROM osm_admin_topo.edge;
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+-- Convert the TopoGeometries to Geometries for visualization
+\end_layout
+
+\begin_layout Plain Layout
+ALTER TABLE osm_admin ADD geomfull Geometry(Geometry, 4326);
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+UPDATE osm_admin
+\end_layout
+
+\begin_layout Plain Layout
+   SET geomfull = geometry,
+\end_layout
+
+\begin_layout Plain Layout
+       geometry = topogeom::geometry;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+%
+\backslash
+bibliographystyle{plain}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+%
+\backslash
+bibliography{bibliography}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+
+\backslash
+printbibliography
+\end_layout
+
+\end_inset
+
+[heading=bibintoc, title=Bibliography]
+\end_layout
+
+\begin_layout Standard
+
+\lang american
+
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+{
+\end_layout
+
+\end_inset
+
+document
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset ERT
+status collapsed
+
+\begin_layout Plain Layout
+}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
