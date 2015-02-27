@@ -74,6 +74,18 @@
 		{ö}{{\"o}}1
 }
 
+% BibLaTeX
+%\usepackage[style=authoryear]{biblatex}
+%\usepackage[style=numeric]{biblatex}
+\usepackage[style=alphabetic]{biblatex}
+
+\AtEveryBibitem{\clearlist{language}} % clears language
+\AtEveryBibitem{\clearfield{note}}    % clears notes
+\AtEveryBibitem{\clearfield{doi}} % clears doi
+\AtEveryBibitem{\clearfield{isbn}} % clears doi
+\AtEveryBibitem{\clearfield{issn}} % clears doi
+\addbibresource{bibliography.bib} % Syntax for version >= 1.2
+
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
 %----------------------------------------------------------------------------------------
@@ -236,8 +248,7 @@ Initially, after the import from Open Street Maps, all the country, state and di
 
 The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. Postgis provides the function \lstinline{ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, \lstinline{ST_SimplifyPreserveTopology} doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
 
-The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from 
-	\todo[inline]{Source Ref to http://strk.keybit.net/blog/2012/04/13/simplifying-a-map-layer-using-postgis-topology/}. The complete Script can be found in the Apendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
+The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from \textcite{website:strks-blog}. The complete Script can be found in the Apendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
 
 \begin{figure}[htbp]
 	\centering
@@ -694,17 +705,20 @@ Source:
 \todo[inline]{TODO}
 
 \subsection{Start Webapp-Server}
-Remember to set the virtual environment first if you restarted the Virtual Machine.
-\begin{lstlisting}
-source ~/miniconda3/bin/activate spatial-weather
-\end{lstlisting}
+
+Remember to set the virtual environment first:
+
+\lstinline{source ~/miniconda3/bin/activate spatial-weather}
+
+\ \\
 Then you can run the Webserver:
-\begin{lstlisting}
-python manage.py runserver
-\end{lstlisting}
+
+\lstinline{python manage.py runserver}
+
+\printbibliography[heading=bibintoc, title=Bibliography]
 
 \section{Appendix}
-\todo [inline] {Literature (if any)}
+
 \subsection{Link to Repository}
 
 \subsection{Border Simplification Script}{\label{simplifycation_script}
