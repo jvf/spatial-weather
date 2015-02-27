@@ -212,10 +212,7 @@ for Germany from Geofabrik and import them with imposm as described in \ref{impo
   ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
 
   ~\\
-  The relational schema is following Kemper and Eickler \cite{Kemper2011} \todo[inline]{Fix bibtex include}.
-  The schema is not identical to the schema used in the actual PostgreSQL DB where for example 
-  additional fields used solely for the import are still remaining. The presented
-  schema is given for illustrating conceptual ideas. 
+  The relational schema is following \textcite{Kemper2011}. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas. 
   
   ~\\
   As can be seen in the relational schema there are no foreign keys or junction tables
@@ -412,7 +409,6 @@ photos. \todo[inline]{noch mehr ausblick kram\ldots}
 This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
 The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
 
-\todo[inline]{Bitte zeilennummern wegmachen, das sieht sehr doof aus bei command listings}
 \begin{lstlisting}
 sudo apt-get install gdal-bin postgis git vagrant python
 \end{lstlisting}
