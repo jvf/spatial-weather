@@ -122,10 +122,11 @@
 	The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS.
 	\subsection{Motivation}
 	The motivation of this project can be seen from a educational as well as from a technical point of view.\\
-	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he lives university and has to deal with real world problems.\\
-	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
+	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.\\
+%	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
+% zu Anti-Uni, das findet Voisard nicht gut
 	\subsection{Goal}
-	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather-data. In order to achieve this Goal several technical Problems have to be solved, like designing a Data-Model, a suitable System-Architecture as well as setting up and configuring the whole System.
+	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
 	
 \newpage
 \section{Data Sources}\label{sec:datasources}
@@ -199,8 +200,8 @@ Germany, we are using that interface download the GRIB data
 
 \newpage
 \section{Architecture}
-The Architecture as shown in fig. \ref{fig:architecture} consist of 4 major parts:\\
-The data-sources and their corresponding downloaders and importers, the PostGIS-Server, running in a virtual machine, the backend and a webapp. In the following four subsections \ref{subsec:dsai} to \ref{subsec:webapp} I'll explain how those components are working together and what parts they are made of as well as which technologies have been used to implement them.
+The architecture as shown in fig. \ref{fig:architecture} consist of 4 major parts:\\
+The data sources and their corresponding downloaders and importers, the PostGIS-Server, running in a virtual machine, the backend and a webapp. In the following four subsections \ref{subsec:dsai} to \ref{subsec:webapp} it will be  explained how those components work together and what parts they are made of as well as which technologies have been used to implement them.
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/Architektur.png}
 \caption{Architecture}
@@ -210,12 +211,12 @@ The data-sources and their corresponding downloaders and importers, the PostGIS-
 
 \subsection{Data Sources and Importer}\label{subsec:dsai}
 The three data-sources used in this project are \todo[inline]{add 3 sources} and have been discussed in section \ref{sec:datasources} very detailed. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
-\subsection{Server}
-The server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGis along with other required packages and configures most of the things needed for the server to be ready to be used.
+\subsection{Database Server}
+The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGis along with other required packages and configures most of the things needed for the server to be used.
 \subsection{Backend}
-The backend runs Flask, a model-view-controller-based framework. This framework contains methods to invoke data-collection and data-import as well as an ORM based on SQL-Alchemy and GEO-Alchemy to send queries to the database to retrieve data requested by the user via the Frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the Frontend.
+The backend runs Flask, a model-view-controller-based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend.
 \subsection{Webapp (Frontend)}\label{subsec:webapp}
-The Frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a User Interface which is described in detail in section \ref{usage}. To display the weather- and OSM-data the library Leaflet is used. The Frontend receives the requested data from the backend in JSON.
+The frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a user interface which is described in detail in section \ref{usage}. To display the weather and OSM data the library Leaflet is used. The frontend receives the requested data from the backend in (Geo)JSON.
 
 \section{Optimisations}
 
@@ -225,7 +226,7 @@ Indices were used on all primary keys, all geometry columns and some frequently 
 
 \subsection{Materialised Computations}
 
-When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done \emph{within} one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (\lstinline{Contrib_State}, \lstinline{Contrib_District}), which brought the query time significantly. 
+When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done \emph{within} one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (\lstinline{Contrib_State}, \lstinline{Contrib_District}), which brought down the query time significantly. 
 
 \subsection{Border Simplifications}	
 
@@ -256,7 +257,7 @@ Figure \ref{simplification_table} summarises the performance gains for the most 
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[trim = 0mm 0mm 0mm 0mm, clip, width=0.95\textwidth]{pictures/simplification_table}
+	\includegraphics[trim = 0mm 0mm 0mm 0mm, clip, width=1.1\textwidth]{pictures/simplification_table}
 	\caption{Performance Gains From the Simplification}
 	\label{simplification_table}
 \end{figure}
