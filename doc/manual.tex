@@ -237,21 +237,37 @@ Initially, after the import from Open Street Maps, all the country, state and di
 The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. Postgis provides the function \lstinline{ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, \lstinline{ST_SimplifyPreserveTopology} doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
 
 The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from 
-	\todo[inline]{Source Ref to http://strk.keybit.net/blog/2012/04/13/simplifying-a-map-layer-using-postgis-topology/}. The complete Script can be found in the Apendix. Figure \ref{borders_full} and \ref{borders_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. To total combined size of the geometry columns after the simplification was 895 KiB!
+	\todo[inline]{Source Ref to http://strk.keybit.net/blog/2012/04/13/simplifying-a-map-layer-using-postgis-topology/}. The complete Script can be found in the Apendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[trim = 80mm 10mm 200mm 20mm, clip, width=0.95\textwidth]{pictures/borders_full}
-	\caption{Full Borders Berlin-Brandenburg}
+	\includegraphics[trim = 0mm 0mm 0mm 0mm, clip, width=0.95\textwidth]{pictures/berlin_full}
+	\caption{Berlin Full Detail}
 	\label{borders_full}
 \end{figure}
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[trim = 80mm 10mm 200mm 20mm, clip, width=0.95\textwidth]{pictures/borders_simplified}
-	\caption{Simplified Borders Berlin-Brandenburg}
+	\includegraphics[trim = 0mm 0mm 0mm 0mm, clip, width=0.95\textwidth]{pictures/berlin_simplified}
+	\caption{Berlin Simplified}
 	\label{borders_simple}
 \end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[trim = 160mm 0mm 160mm 0mm, clip, width=1\textwidth]{pictures/germany_full}
+	\caption{Germany Full Detail}
+	\label{germany_full}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[trim = 160mm 0mm 160mm 0mm, clip, width=1\textwidth]{pictures/germany_simplified}
+	\caption{Germany Simplified}
+	\label{germany_simple}
+\end{figure}
+
+
 
 Figure \ref{simplification_table} summarises the performance gains for the most intensive query we perform. As you can see, the simplification achieved significant performance improvements.
 
