@@ -142,8 +142,6 @@
 	
 \newpage
 \section{Data Sources}\label{sec:datasources}
-	- kurze Beschreibung der drei Datenquellen
-	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
 
 We are using three differente data sources for administrative borders, historical
 and forecast weather data. Since the historical data is feature based but the
@@ -152,7 +150,21 @@ weather information for german states and districts and a voronoi diagram based
 on official german weather stations. 
 
 \subsection{Deutscher Wetterdienst (DWD)}
-\todo{DO!}
+The DWD provides historical meassurement data from 509 weather stations all over 
+germany. The data is freely available as comma-separated values (CSV) from a FTP
+server. Every station is identified by a unique id, has a name, a spatial location
+and an altitude and provides multiple daily meassurements.
+
+As mentioned above we use the stations locations to generate a voronoi tesselation
+covering germany and assign each resulting cell the meassurement from the associated 
+station. To get values for districts or states, we are calculating a weighted mean
+based on the area a voronoi cell is contributing. Since this operation is costly
+we did apply some optimisations as described in section \ref{subsec:opticontrib}.
+
+The tool used to download and import DWD data is based on work of a fellow student
+working on the same topic \todo[inline]{quelle stat link} \href{https://github.com/cholin/fuberlin_spatial_db_project}.
+Its usage is described in section \ref{import-dwd-data}.
+
 
 \subsection{Global Forecast System (GFS)}
 We use data from the Global Forecast System (GFS) in our application for weather 
@@ -175,14 +187,14 @@ to extract certain levels and variables for a subregion.
 Because we are only interested in the temperature and rainfall forecasts for 
 Germany, we are using that interface to download the GRIB data. Because the 
 webinterface does not allow to download data older than one month, we provide 
-separate download and import scripts as described in \ref{download-and-import-noaa-gfs-data-forecasts} 
+separate download and import scripts as described in section \ref{download-and-import-noaa-gfs-data-forecasts} 
 that can be run periodically. 
 
 \subsection{OpenStreetMap (OSM)}
 OSM is used to get the administrative borders of Germany, german states and districts.
 Since we are using tiles from external providers, we didn't have to render them 
 ourselves from the OSM data. We recommend to download compressed PBF files 
-for Germany from Geofabrik and import them with imposm as described in \ref{import-osm-data}.
+for Germany from Geofabrik and import them with imposm as described in section \ref{import-osm-data}.
 
 
 \section{Data Model}
@@ -250,7 +262,7 @@ The frontend in implemented as a webapp written in HTML5, CSS3 and Javascript an
 
 Indices were used on all primary keys, all geometry columns and some frequently queried attributes, like dates. All indices were used from the beginning, so no information on the performance gains is available.
 
-\subsection{Materialised Computations}
+\subsection{Materialised Computations}\label{subsec:opticontrib}
 
 When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done \emph{within} one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (\lstinline{Contrib_State}, \lstinline{Contrib_District}), which brought down the query time significantly. 
 
@@ -402,6 +414,15 @@ photos. \todo[inline]{noch mehr ausblick kram\ldots}
 
 \section{Conclusion}
 	- lessons learned
+
+
+
+
+
+
+
+
+
 
 \section{Setup Guide}
 \subsection{Prerequisites}
