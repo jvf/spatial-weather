@@ -103,7 +103,7 @@
 \newcommand*{\justifyheading}{\raggedright}
 \titleformat{\subsection}{\large\justifyheading}{\thesubsection}{1em}{}
 
-\author{Johannes Dillmann (matr-nr) \\ Christian Wirth (4498611) \\ Jens Fischer (3923671)}
+\author{Johannes Dillmann (4476004) \\ Christian Wirth (4498611) \\ Jens Fischer (3923671)}
 
 \date{\normalsize\today} % Today's date or a custom date
 \begin{document}
@@ -145,6 +145,15 @@
 	- kurze Beschreibung der drei Datenquellen
 	- vielleicht die (konzeptuelle) Beschreibung der Download Prozesse auch hier?
 
+We are using three differente data sources for administrative borders, historical
+and forecast weather data. Since the historical data is feature based but the
+forecasts are provided as regular grid, we decided to use irregular tesselation to display
+weather information for german states and districts and a voronoi diagram based
+on official german weather stations. 
+
+\subsection{Deutscher Wetterdienst (DWD)}
+\todo{DO!}
+
 \subsection{Global Forecast System (GFS)}
 We use data from the Global Forecast System (GFS) in our application for weather 
 forecasts. The GFS is a weather forecast model computed and freely distributed
@@ -153,7 +162,7 @@ by the National Oceanic and Atmospheric Administration (NOAA) of the United Stat
 
 The GFS model is calculated every 6h hours and covers the entire globe at a resolution 
 of 28 kilometers for weather predictions within 16 days. Furthermore it provides
-forecats for up to two weeks, but with a lower resolution of 70 kilometers. 
+forecast up to two weeks with a lower resolution of 70 kilometers. 
 \todo[inline]{Vielleicht  noch auflisten was die alles haben}
 
 
@@ -164,16 +173,25 @@ to extract certain levels and variables for a subregion.
 
 
 Because we are only interested in the temperature and rainfall forecasts for 
-Germany, we are using that interface download the GRIB data
+Germany, we are using that interface to download the GRIB data. Because the 
+webinterface does not allow to download data older than one month, we provide 
+separate download and import scripts as described in \ref{download-and-import-noaa-gfs-data-forecasts} 
+that can be run periodically. 
+
+\subsection{OpenStreetMap (OSM)}
+OSM is used to get the administrative borders of Germany, german states and districts.
+Since we are using tiles from external providers, we didn't have to render them 
+ourselves from the OSM data. We recommend to download compressed PBF files 
+for Germany from Geofabrik and import them with imposm as described in \ref{import-osm-data}.
+
 
 \section{Data Model}
+
 \subsection{Entity Relationship Diagram (ERD) }
   \begin{figure}[htbp]
   \includegraphics[width=1\textwidth]{pictures/er-model}
   \caption{ER-Diagram}
   \end{figure}
-
-  \todo[inline]{Geg. ER Model anpassen für Station Attribute}
 
 \subsection{Relational Schema}
   
@@ -194,8 +212,7 @@ Germany, we are using that interface download the GRIB data
   ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
 
   ~\\
-  The relational schema is following Kemper, Eickler (2009): Datenbanksysteme 7. Aufl. 
-  \todo[inline]{Bibtex quelle einfügen}
+  The relational schema is following Kemper and Eickler \cite{Kemper2011} \todo[inline]{Fix bibtex include}.
   The schema is not identical to the schema used in the actual PostgreSQL DB where for example 
   additional fields used solely for the import are still remaining. The presented
   schema is given for illustrating conceptual ideas. 
@@ -304,7 +321,9 @@ available
 \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile
 Server} and tiles generated for free by
 \href{https://www.mapbox.com/}{Mapbox}. The desired basetile layer can
-be selected as seen in fig. \ref{fig:layer-selection}
+be selected as seen in fig. \ref{fig:layer-selection}.
+The map can also be panned and zoomed by using a pointing device
+(e.g. mouse).
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-baselayer.png}
@@ -312,23 +331,17 @@ be selected as seen in fig. \ref{fig:layer-selection}
 \label{fig:layer-selection}
 \end{figure}
 
-\newpage
-The map can also be panned and zoomed by using a pointing device
-(e.g.~mouse).
-
 The displayed weather data can be set by an additional control as seen
-in fig. \ref{fig:weather-control}
+in fig. \ref{fig:weather-control}.
+It allows to choose either temperatures or reciprocal rainfall for a
+certain day. The day can be selected with an interactive date-time picker
+as seen in fig. \ref{fig:date-time-picker}.
 
 \begin{figure}[htbp]
 \includegraphics[width=1\textwidth]{pictures/screenshot-control.png}
 \caption{Weather control}
 \label{fig:weather-control}
 \end{figure}
-
-\newpage
-It allows to choose either temperatures or reciprocal rainfall for a
-certain day. The day can be selected with an interactive date-time picker
-as seen in fig. \ref{fig:date-time-picker}
 
 \begin{figure}[htbp]
 \centering
@@ -342,7 +355,6 @@ display forecasts. If the forecast box is checked, the forecasts slider
 is activated and allows to select point of forecast in hours, starting
 from the chosen date and time.
 
-\newpage
 As mentioned before, the data can be displayed for different rasters: a
 voronoi tessellation based on official weather stations, german states or
 districts as shown in fig. \ref{fig:raster-comparison}. The desired raster can be selected with the control. Once the
@@ -350,15 +362,15 @@ selection did change, the weather control is loading the matching data
 from the backend via a JSON interface and displays the raster on the
 map.
 
+The cells are colored according to selected data and a legend is shown
+on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-raster.png}
 \caption{Raster comparison}
 \label{fig:raster-comparison}
 \end{figure}
-
-The cells are colored according to selected data and a legend is shown
-on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
 
 \begin{figure}[htbp]
 \centering
@@ -380,16 +392,16 @@ voronoi tessellation, the position of the weather station. Furthermore a
 pop-up as in fig. \ref{fig:popup} is shown, which provides additional data associated to the
 selected cell by calling the backends JSON interface.
 
+Currently this is just the alphanumerical attributes, but could be used
+to show automatically generated temperature timelines or recent webcam
+photos. \todo[inline]{noch mehr ausblick kram\ldots}
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-popup.png}
 \caption{Pop-up}
 \label{fig:popup}
 \end{figure}
-
-Currently this is just the alphanumerical attributes, but could be used
-to show automatically generated temperature timelines or recent webcam
-photos or \ldots{}\todo [inline]{noch mehr ausblick kram\ldots}
 
 \section{Conclusion}
 	- lessons learned
@@ -400,6 +412,7 @@ photos or \ldots{}\todo [inline]{noch mehr ausblick kram\ldots}
 This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
 The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
 
+\todo[inline]{Bitte zeilennummern wegmachen, das sieht sehr doof aus bei command listings}
 \begin{lstlisting}
 sudo apt-get install gdal-bin postgis git vagrant python
 \end{lstlisting}
@@ -422,6 +435,7 @@ libblas-dev, liblapack-dev, gfortran.
 \subsection{Step-by-step Setup}
 Now switch to directory that should later contain your project-source-code
 
+\todo[inline]{Auf Github verweisen}
 Clone Repository by typing into console:
 \begin{lstlisting}
 git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git
@@ -441,6 +455,7 @@ You can open a new console and proceed with the following steps on your local ma
 Install miniconda from the website:\\
 http://conda.pydata.org/miniconda.html
 
+/todo[inline]{warum ist conda raus genommen?}
 --conda install --file requirements.conda
 
 This command has to be executed every time the server has been started in order to activate the Python virtual environment.
