@@ -162,7 +162,7 @@ based on the area a voronoi cell is contributing. Since this operation is costly
 we did apply some optimisations as described in section \ref{subsec:opticontrib}.
 
 The tool used to download and import DWD data is based on work of a fellow student
-working on the same topic \todo[inline]{quelle stat link} \href{https://github.com/cholin/fuberlin_spatial_db_project}.
+working on the same topic \todo{quelle stat link} \url{https://github.com/cholin/fuberlin_spatial_db_project}.
 Its usage is described in section \ref{import-dwd-data}.
 
 
@@ -175,7 +175,6 @@ by the National Oceanic and Atmospheric Administration (NOAA) of the United Stat
 The GFS model is calculated every 6h hours and covers the entire globe at a resolution 
 of 28 kilometers for weather predictions within 16 days. Furthermore it provides
 forecast up to two weeks with a lower resolution of 70 kilometers. 
-\todo[inline]{Vielleicht  noch auflisten was die alles haben}
 
 
 The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB) 
@@ -428,22 +427,20 @@ photos. \todo[inline]{noch mehr ausblick kram\ldots}
 \subsection{Prerequisites}
 
 This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
-The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS
+The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS and the postgres database drive for Python.
 
 \begin{lstlisting}
-sudo apt-get install gdal-bin postgis git vagrant python
+sudo apt-get install gdal-bin postgis git vagrant python3 python3-dev python3-psycopg2 libpq-dev 
 \end{lstlisting}
-\todo[inline]{check packages}
 
 It is strongly advised to install scipy, numpy and shapely (globaly) as
 binary packages and not through virtualenv, because of their large
 number of non-python dependencies. E.g. on Debian/Ubuntu systems use
 \begin{lstlisting}
-sudo apt-get install python3-numpy python3-scipy python3-shapely
+sudo apt-get install python3-numpy python3-scipy python3-shapely 
 \end{lstlisting}
 to install. Make sure access to the global packages is activated in the
-virtual environment\\(e.g.~through \texttt{toggleglobalsitepackages} in
-\texttt{virtualenvwrapper}).
+virtual environment.
 
 When compiling entirely from source, You also might need to install the
 following libraries: (for shapely): libgeos-dev; (for scipy):
@@ -455,7 +452,7 @@ Now switch to directory that should later contain your project-source-code
 \todo[inline]{Auf Github verweisen}
 Clone Repository by typing into console:
 \begin{lstlisting}
-git clone https://<<your_username>>@bitbucket.org/kleingeist/spatial-weather.git
+git clone https://github.com/jvf/spatial-weather.git
 \end{lstlisting}
 
 Change directory to spatial-weather
@@ -469,31 +466,29 @@ vagrant up
 \end{lstlisting}
 
 You can open a new console and proceed with the following steps on your local machine:\\
-Install miniconda from the website:\\
-http://conda.pydata.org/miniconda.html
+Install miniconda from the website: 
+\url{http://conda.pydata.org/miniconda.html} and create a virtual environment with the following command:
 
-/todo[inline]{warum ist conda raus genommen?}
---conda install --file requirements.conda
-
-This command has to be executed every time the server has been started in order to activate the Python virtual environment.
 \begin{lstlisting}
-source ~/miniconda3/bin/activate spatial-weather
+conda create -n spatial-weather --file requirements.conda
 \end{lstlisting}
 
-install database-driver for python3:
+The virtual environment can be activated by executing the following command.
+Remember that the environment has to be active to start the server succesfully.
 \begin{lstlisting}
-sudo apt-get install python3-psycopg2 libpq-dev python3-dev
+source activate spatial-weather
 \end{lstlisting}
 
-install additional requirements for python:\\
-(take a look at requirements.txt for further details.)
-\todo[inline]{TDOD}
+The first time the environment is activated it is required to install additional 
+requirements that are not available within the conda distribution. The installation
+is handled by pip and can be called with the following command. 
 \begin{lstlisting}
 pip install -r requirements.txt
 \end{lstlisting}
 
-These steps will only work once the Virtual Machine has been successfully provisioned.\\
-Create database and Postgis extesions:
+The weather app requires a databse with the postgis and postgis\_topology extensions enabled.
+The following command can be used to create the default database with the required
+access levels within the previously provisioned virtual machine.
 \begin{lstlisting}[breaklines=true]
 vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
 vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
@@ -510,7 +505,7 @@ The importer used is \texttt{imposm3}, which is included in the vagrant setup (a
 
 Prerequisite: No contrib tables, delete if existing:
 \begin{lstlisting}
-	python manage.py drop\_tables -t contrib
+	python manage.py drop_tables -t contrib
 \end{lstlisting}
 
 To import all the OSM data use the manage script. To invoke the whole pipeline use the following command (will take several hours):
@@ -622,7 +617,7 @@ to create and fill the ContribState and ContribDistrict tables.
 Remember to set the virtual environment first:
 
 \begin{lstlisting}
-	source ~/miniconda3/bin/activate spatial-weather
+	source activate spatial-weather
 \end{lstlisting}
 
 \ \\
