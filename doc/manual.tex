@@ -92,8 +92,8 @@
 
 \newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
 
-\title{	
-\normalfont \normalsize 
+\title{
+\normalfont \normalsize
 \textsc{\includegraphics[width=0.6\textwidth]{pictures/logo} \\ [5pt] Arbeitsgruppe Datenbanken und Informationssysteme \\ [20pt] \includegraphics[width=0.15\textwidth]{pictures/DBIS_Logo_rgb_web.png}} \\ [10pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
 \huge Spatial Databases: Project Documentation \\ % The assignment title
@@ -139,7 +139,7 @@
 % zu Anti-Uni, das findet Voisard nicht gut
 	\subsection{Goal}
 	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
-	
+
 \newpage
 \section{Data Sources}\label{sec:datasources}
 
@@ -147,52 +147,51 @@ We are using three differente data sources for administrative borders, historica
 and forecast weather data. Since the historical data is feature based but the
 forecasts are provided as regular grid, we decided to use irregular tesselation to display
 weather information for german states and districts and a voronoi diagram based
-on official german weather stations. 
+on official german weather stations.
 
 \subsection{Deutscher Wetterdienst (DWD)}
-The DWD provides historical meassurement data from 509 weather stations all over 
+The DWD provides historical meassurement data from 509 weather stations all over
 germany. The data is freely available as comma-separated values (CSV) from a FTP
 server. Every station is identified by a unique id, has a name, a spatial location
 and an altitude and provides multiple daily meassurements.
 
 As mentioned above we use the stations locations to generate a voronoi tesselation
-covering germany and assign each resulting cell the meassurement from the associated 
+covering germany and assign each resulting cell the meassurement from the associated
 station. To get values for districts or states, we are calculating a weighted mean
 based on the area a voronoi cell is contributing. Since this operation is costly
 we did apply some optimisations as described in section \ref{subsec:opticontrib}.
 
 The tool used to download and import DWD data is based on work of a fellow student
-working on the same topic \todo{quelle stat link} \url{https://github.com/cholin/fuberlin_spatial_db_project}.
-Its usage is described in section \ref{import-dwd-data}.
+working on the same topic (cf. \autocite{website:cholin}). Its usage is described in section \ref{import-dwd-data}.
 
 
 \subsection{Global Forecast System (GFS)}
-We use data from the Global Forecast System (GFS) in our application for weather 
+We use data from the Global Forecast System (GFS) in our application for weather
 forecasts. The GFS is a weather forecast model computed and freely distributed
 by the National Oceanic and Atmospheric Administration (NOAA) of the United States.
 
 
-The GFS model is calculated every 6h hours and covers the entire globe at a resolution 
+The GFS model is calculated every 6h hours and covers the entire globe at a resolution
 of 28 kilometers for weather predictions within 16 days. Furthermore it provides
-forecast up to two weeks with a lower resolution of 70 kilometers. 
+forecast up to two weeks with a lower resolution of 70 kilometers.
 
 
-The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB) 
-from the NOAA servers. They provide among other access methods like FTP services, 
+The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB)
+from the NOAA servers. They provide among other access methods like FTP services,
 a simple \href{http://nomads.ncep.noaa.gov/txt_descriptions/grib_filter_doc.shtml}{webinterface}
 to extract certain levels and variables for a subregion.
 
 
-Because we are only interested in the temperature and rainfall forecasts for 
-Germany, we are using that interface to download the GRIB data. Because the 
-webinterface does not allow to download data older than one month, we provide 
-separate download and import scripts as described in section \ref{download-and-import-noaa-gfs-data-forecasts} 
-that can be run periodically. 
+Because we are only interested in the temperature and rainfall forecasts for
+Germany, we are using that interface to download the GRIB data. Because the
+webinterface does not allow to download data older than one month, we provide
+separate download and import scripts as described in section \ref{download-and-import-noaa-gfs-data-forecasts}
+that can be run periodically.
 
 \subsection{OpenStreetMap (OSM)}
 OSM is used to get the administrative borders of Germany, german states and districts.
-Since we are using tiles from external providers, we didn't have to render them 
-ourselves from the OSM data. We recommend to download compressed PBF files 
+Since we are using tiles from external providers, we didn't have to render them
+ourselves from the OSM data. We recommend to download compressed PBF files
 for Germany from Geofabrik and import them with imposm as described in section \ref{import-osm-data}.
 
 
@@ -205,7 +204,7 @@ for Germany from Geofabrik and import them with imposm as described in section \
   \end{figure}
 
 \subsection{Relational Schema}
-  
+
   Country : \{{[}\uline{osm\_id: biginteger}, name: string, geom:  geometry{]}\}
 
   State : \{{[}\uline{osm\_id: biginteger}, name: string, geom: geometry{]}\}
@@ -223,13 +222,13 @@ for Germany from Geofabrik and import them with imposm as described in section \
   ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
 
   ~\\
-  The relational schema is following \textcite{Kemper2011}. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas. 
-  
+  The relational schema is following \textcite{Kemper2011}. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas.
+
   ~\\
   As can be seen in the relational schema there are no foreign keys or junction tables
-  used to reference the relation between countries, states, districts and stations. 
+  used to reference the relation between countries, states, districts and stations.
   Those entities are related by their spatial component and will be joined by using
-  spatial joins provided by the PostGIS extension. 
+  spatial joins provided by the PostGIS extension.
 
 
 
@@ -263,11 +262,11 @@ Indices were used on all primary keys, all geometry columns and some frequently 
 
 \subsection{Materialised Computations}\label{subsec:opticontrib}
 
-When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done \emph{within} one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (\lstinline{Contrib_State}, \lstinline{Contrib_District}), which brought down the query time significantly. 
+When querying the forecast information for all the states, districts or stations our first implementation used nested queries within the ORM (i.e. multiple queries where send to the database). This queries took extremely long, several minutes in the case of districts. To improve performance, we reimplemented this query as one nested query (i.e. the nesting was done \emph{within} one query). This already improved performance significantly. But we also noted that one of the nested subqueries was basically a static computation, namely the computation of the area contribution of the region of a weather station (i.e. the Voronoi cell of a weather station) to the area of a state or district. Therefore we decided to materialise this computation into two tables (\lstinline{Contrib_State}, \lstinline{Contrib_District}), which brought down the query time significantly.
 
-\subsection{Border Simplifications}	
+\subsection{Border Simplifications}
 
-When profiling the application further, we noticed that the huge amount of detail of the country, state and district borders seriously affected the performance, not only in terms of querying but also the sheer amount of data transmitted from the server to the client. 
+When profiling the application further, we noticed that the huge amount of detail of the country, state and district borders seriously affected the performance, not only in terms of querying but also the sheer amount of data transmitted from the server to the client.
 
 Initially, after the import from Open Street Maps, all the country, state and district geometry columns had a combined size of 38 MiB. In an attempt to further improve performance we wanted to simplify the geometries, especially as they were only used for querying and overlaying the respective regions, not for the rendering of the map itself.
 
@@ -432,14 +431,14 @@ This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicor
 The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS and the postgres database drive for Python.
 
 \begin{lstlisting}
-sudo apt-get install gdal-bin postgis git vagrant python3 python3-dev python3-psycopg2 libpq-dev 
+sudo apt-get install gdal-bin postgis git vagrant python3 python3-dev python3-psycopg2 libpq-dev
 \end{lstlisting}
 
 It is strongly advised to install scipy, numpy and shapely (globaly) as
 binary packages and not through virtualenv, because of their large
 number of non-python dependencies. E.g. on Debian/Ubuntu systems use
 \begin{lstlisting}
-sudo apt-get install python3-numpy python3-scipy python3-shapely 
+sudo apt-get install python3-numpy python3-scipy python3-shapely
 \end{lstlisting}
 to install. Make sure access to the global packages is activated in the
 virtual environment.
@@ -465,7 +464,7 @@ vagrant up
 \end{lstlisting}
 
 You can open a new console and proceed with the following steps on your local machine:\\
-Install miniconda from the website: 
+Install miniconda from the website:
 \url{http://conda.pydata.org/miniconda.html} and create a virtual environment with the following command:
 
 \begin{lstlisting}
@@ -478,9 +477,9 @@ Remember that the environment has to be active to start the server succesfully.
 source activate spatial-weather
 \end{lstlisting}
 
-The first time the environment is activated it is required to install additional 
+The first time the environment is activated it is required to install additional
 requirements that are not available within the conda distribution. The installation
-is handled by pip and can be called with the following command. 
+is handled by pip and can be called with the following command.
 \begin{lstlisting}
 pip install -r requirements.txt
 \end{lstlisting}
@@ -489,8 +488,8 @@ The weather app requires a databse with the postgis and postgis\_topology extens
 The following command can be used to create the default database with the required
 access levels within the previously provisioned virtual machine.
 \begin{lstlisting}[breaklines=true]
-vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\"" 
-vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\"" 
+vagrant ssh -c "sudo -u postgres psql -c \"CREATE DATABASE spatial OWNER myapp LC_COLLATE 'en_US.UTF-8' LC_CTYPE 'en_US.UTF-8';\""
+vagrant ssh -c "sudo -u postgres psql -d spatial -c \"CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;\""
 vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spatial TO myapp; ALTER DATABASE spatial OWNER TO myapp; ALTER TABLE topology OWNER to myapp; ALTER TABLE layer OWNER to myapp; ALTER SCHEMA topology OWNER TO myapp;\""
 \end{lstlisting}
 
@@ -510,7 +509,7 @@ Prerequisite: No contrib tables, delete if existing:
 To import all the OSM data use the manage script. To invoke the whole pipeline use the following command (will take several hours):
 
 \begin{lstlisting}
-	python manage.py import_osm --imposm --simplify --load --drop_tables	
+	python manage.py import_osm --imposm --simplify --load --drop_tables
 \end{lstlisting}
 
 
@@ -573,41 +572,49 @@ import them as Postgis Raster.
 
 \subsubsection*{Download}\label{download}
 
-For downloading the GFS data a date range and a target directory has to
-be specified. The format for the start and enddate is
-\texttt{YYYYMMDDHH} or \texttt{latest} for the most recently available
-GFS calculation.\\Optionally the forecast hours can be specified as a
-range (Defaults to download from 0 to 129 in 3 hour steps).
+For downloading the GFS data a date range and a target directory has to be specified. The format for the start and enddate is \texttt{YYYYMMDDHH} or \texttt{latest} for the most recently available GFS calculation. Optionally the forecast hours can be specified as a range (Defaults to download from 0 to 129 in 3 hour steps).
 
-\begin{verbatim}
-usage: run_gfs.py download [-h] [--hours_start HOURS_START]
-                           [--hours_stop HOURS_STOP] [--hours_step HOURS_STEP]
-                           [startdate] [enddate] datadir
-\end{verbatim}
+\begin{lstlisting}
+usage: run_gfs.py download [-h]
+	[--hours_start HOURS_START]
+    [--hours_stop HOURS_STOP]
+    [--hours_step HOURS_STEP]
+    [startdate] [enddate] datadir
+\end{lstlisting}
 
 For example, assuming data should be stored to \texttt{data/forecasts}:
-
-\texttt{./run\_gfs.py\ download\ 2014121112\ 2015011306\ data/forecasts}
+\begin{lstlisting}
+	./run_gfs.py download 2014121112 2015011306 data/forecasts
+\end{lstlisting}
 
 \subsubsection*{Import}\label{import}
 
 To import the downloaded data, the download directory and a data range
 has to be specified:
 
-\begin{verbatim}
-usage: run_gfs.py import [-h] datadir [startdate] [enddate]
-\end{verbatim}
+\begin{lstlisting}
+	usage: run_gfs.py import [-h] datadir [startdate]
+		[enddate]
+\end{lstlisting}
+
 
 For example, assuming the data is stored in \texttt{data/forecasts}:
 
-\texttt{./run\_gfs.py\ import\ data/forecasts\ 2014121112\ 2015011306}
+\begin{lstlisting}
+	./run_gfs.py import data/forecasts 2014121112 2015011306
+\end{lstlisting}
+
 
 \subsubsection*{Build Contrib Tables}\label{build-contrib-tables}
 
 To speed up some queries, the area contribution of the region (voronoi
 cell) of weather stations to states and districts is precomputed and
-materialized. \\
-Run \texttt{python\ manage.py\ calculate\_contrib\_area}
+materialized. Run
+
+\begin{lstlisting}
+	python manage.py calculate_contrib_area
+\end{lstlisting}
+
 to create and fill the ContribState and ContribDistrict tables.
 
 
@@ -776,7 +783,7 @@ install_name_tool -change libcrypto.1.0.0.dylib /Applications/Postgres.app/Conte
 \texttt{psycopq} now uses the correct libraries:
 
 \begin{lstlisting}[breaklines=true]
-otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so                                                                                                                                                   
+otool -L /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so
 $ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycopg.so:
     /usr/local/lib/libpq.5.dylib (compatibility version 5.0.0, current version 5.6.0)
     /Applications/Postgres.app/Contents/Versions/9.3/lib/libssl.1.0.0.dylib (compatibility version 1.0.0, current version 1.0.0)
