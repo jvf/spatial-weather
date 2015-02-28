@@ -171,7 +171,7 @@ by the National Oceanic and Atmospheric Administration (NOAA) of the United Stat
 
 
 The GFS model is calculated every 6h hours and covers the entire globe at a resolution
-of 28 kilometers for weather predictions within 16 days. Furthermore it provides
+of 28 kilometres for weather predictions within 16 days. Furthermore it provides
 forecast up to two weeks with a lower resolution of 70 kilometres.
 
 
@@ -289,7 +289,6 @@ The way to achieve simplification and preserve topological relationships is to u
 	\caption{Germany Full Detail}
 	\label{germany_full}
 \end{figure}
-
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[trim = 160mm 0mm 160mm 0mm, clip, width=1\textwidth]{pictures/germany_simplified}
@@ -297,8 +296,7 @@ The way to achieve simplification and preserve topological relationships is to u
 	\label{germany_simple}
 \end{figure}
 
-
-
+\newpage
 Figure \ref{simplification_table} summarises the performance gains for the most intensive query we perform. As you can see, the simplification achieved significant performance improvements.
 
 \begin{figure}[htbp]
@@ -308,13 +306,19 @@ Figure \ref{simplification_table} summarises the performance gains for the most 
 	\label{simplification_table}
 \end{figure}
 
-
+\newpage
 \section{Usage}\label{usage}
 
 As mentioned in the architecture section, the weather map is displayed
 with HTML5 and controlled with JavaScript. It has been developed as a
 control for the Leaflet library and tested on Google Chrome and
 Chromium. Other browsers are not officially supported.
+
+\begin{figure}[htbp]
+\includegraphics[width=1\textwidth]{pictures/screenshot-baselayer.png}
+\caption{Layer selection}
+\label{fig:layer-selection}
+\end{figure}
 
 By default Leaflet is using a zoom and a layer selection control.
 Instead of rendering the base tiles ourselves, we are using the freely
@@ -323,12 +327,6 @@ available \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile S
 The map can also be panned and zoomed by using a pointing device
 (e.g. mouse).
 
-\begin{figure}[htbp]
-\includegraphics[width=1\textwidth]{pictures/screenshot-baselayer.png}
-\caption{Layer selection}
-\label{fig:layer-selection}
-\end{figure}
-
 The displayed weather data can be set by an additional control as seen
 in fig. \ref{fig:weather-control}.
 It allows to choose either temperatures or reciprocal rainfall for a
@@ -336,18 +334,20 @@ certain day. The day can be selected with an interactive date-time picker
 as seen in fig. \ref{fig:date-time-picker}.
 
 \begin{figure}[htbp]
-\includegraphics[width=1\textwidth]{pictures/screenshot-control.png}
+\centering
+\includegraphics[width=.8\textwidth]{pictures/screenshot-control.png}
 \caption{Weather control}
 \label{fig:weather-control}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{pictures/screenshot-control-datetime.png}
+\includegraphics[width=.8\textwidth]{pictures/screenshot-control-datetime.png}
 \caption{Date-time picker}
 \label{fig:date-time-picker}
 \end{figure}
 
+\newpage
 The selected date and time is also used to pick the computed GFS used to
 display forecasts. If the forecast box is checked, the forecasts slider
 is activated and allows to select point of forecast in hours, starting
@@ -360,9 +360,6 @@ selection did change, the weather control is loading the matching data
 from the backend via a JSON interface and displays the raster on the
 map.
 
-The cells are coloured according to selected data and a legend is shown
-on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
-
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=1\textwidth]{pictures/screenshot-raster.png}
@@ -370,29 +367,29 @@ on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref
 \label{fig:raster-comparison}
 \end{figure}
 
+\newpage
+The cells are coloured according to selected data and a legend is shown
+on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
+
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{pictures/screenshot-legend-temp.png}
+\includegraphics[width=.6\textwidth]{pictures/screenshot-legend-temp.png}
 \caption{Temperature legend}
 \label{fig:temperature-legend}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=1\textwidth]{pictures/screenshot-legend-rain.png}
+\includegraphics[width=.6\textwidth]{pictures/screenshot-legend-rain.png}
 \caption{Rainfall legend}
 \label{fig:rainfall-legend}
 \end{figure}
 
+\newpage
 Each cell is clickable and highlights it's border or, in case of the
 voronoi tessellation, the position of the weather station. Furthermore a
 pop-up as in fig. \ref{fig:popup} is shown, which provides additional data associated to the
 selected cell by calling the backend's JSON interface.
-
-Currently this is just the alphanumerical attributes, but could be used
-to show automatically generated temperature timelines or recent webcam
-photos.
-For future development it would be great to add features that allow a comparison and evaluation of forecast- and historical data. This could be achieved, by overlaying the forecast-data with different offsets for a particular point in time with the historical data. The resulting graphical representation could then allow an evaluation of the correctness of forecasts.
 
 \begin{figure}[htbp]
 \centering
@@ -400,6 +397,9 @@ For future development it would be great to add features that allow a comparison
 \caption{Pop-up}
 \label{fig:popup}
 \end{figure}
+
+Currently this is just the alphanumerical attributes, but could be used to show automatically generated temperature timelines or recent webcam photos.\\
+For future development it would be great to add features that allow a comparison and evaluation of forecast- and historical data. This could be achieved, by overlaying the forecast-data with different offsets for a particular point in time with the historical data. The resulting graphical representation could then allow an evaluation of the correctness of forecasts.
 
 
 \newpage
