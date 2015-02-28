@@ -249,6 +249,7 @@ The backend runs Flask, a model-view-controller-based web framework. This framew
 \subsection{Webapp (Frontend)}\label{subsec:webapp}
 The frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a user interface which is described in detail in section \ref{usage}. To display the weather and OSM data the library Leaflet is used. The frontend receives the requested data from the backend in (Geo)JSON.
 
+
 \section{Optimisations}
 
 \subsection{Indices}
@@ -372,19 +373,18 @@ on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-temp.png}
+\includegraphics[width=1\textwidth]{pictures/screenshot-legend-temp.png}
 \caption{Temperature legend}
 \label{fig:temperature-legend}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.5\textwidth]{pictures/screenshot-legend-rain.png}
+\includegraphics[width=1\textwidth]{pictures/screenshot-legend-rain.png}
 \caption{Rainfall legend}
 \label{fig:rainfall-legend}
 \end{figure}
 
-\newpage
 Each cell is clickable and highlights it's border or, in case of the
 voronoi tessellation, the position of the weather station. Furthermore a
 pop-up as in fig. \ref{fig:popup} is shown, which provides additional data associated to the
@@ -403,7 +403,7 @@ For future development it would be great to add features that allow a comparison
 \end{figure}
 
 
-
+\newpage
 \section{Conclusion}
 
 -lessons learned
