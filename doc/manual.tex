@@ -77,7 +77,7 @@
 % BibLaTeX
 %\usepackage[style=authoryear]{biblatex}
 %\usepackage[style=numeric]{biblatex}
-\usepackage[style=alphabetic]{biblatex}
+\usepackage[backend=biber, style=numeric]{biblatex}
 
 \AtEveryBibitem{\clearlist{language}} % clears language
 \AtEveryBibitem{\clearfield{note}}    % clears notes
@@ -96,7 +96,7 @@
 \normalfont \normalsize
 \textsc{\includegraphics[width=0.6\textwidth]{pictures/logo} \\ [5pt] Arbeitsgruppe Datenbanken und Informationssysteme \\ [20pt] \includegraphics[width=0.15\textwidth]{pictures/DBIS_Logo_rgb_web.png}} \\ [10pt] % Your university, school and/or department name(s)
 \horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
-\huge Spatial Databases: Project Documentation \\ % The assignment title
+\huge Spatial Databases:\\ Project Documentation \\ [0.15cm] % The assignment title
 \normalsize \textsc{Setup-Guide and Documentation for Spatial-Weather-Project} \\ [0.4cm]
 \horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
 }
@@ -118,7 +118,6 @@
 \setcounter{page}{1}
 \addcontentsline{toc}{section}{\protect\numberline{}{Table of Contents}}
 \tableofcontents
-%\thispagestyle{empty}
 
 \newpage
 \listoffigures
@@ -133,7 +132,7 @@
 	\subsection{Topic}
 	The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS.
 	\subsection{Motivation}
-	The motivation of this project can be seen from a educational as well as from a technical point of view.\\
+	The motivation of this project can be seen from an educational as well as from a technical point of view.\\
 	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.\\
 %	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
 % zu Anti-Uni, das findet Voisard nicht gut
@@ -143,26 +142,26 @@
 \newpage
 \section{Data Sources}\label{sec:datasources}
 
-We are using three differente data sources for administrative borders, historical
+We are using three different data sources for administrative borders, historical
 and forecast weather data. Since the historical data is feature based but the
-forecasts are provided as regular grid, we decided to use irregular tesselation to display
+forecasts are provided as regular grid, we decided to use irregular tessellation to display
 weather information for german states and districts and a voronoi diagram based
 on official german weather stations.
 
 \subsection{Deutscher Wetterdienst (DWD)}
-The DWD provides historical meassurement data from 509 weather stations all over
-germany. The data is freely available as comma-separated values (CSV) from a FTP
+The DWD provides historical measurement data from 509 weather stations all over
+Germany. The data is freely available as comma-separated values (CSV) from a FTP
 server. Every station is identified by a unique id, has a name, a spatial location
-and an altitude and provides multiple daily meassurements.
+and an altitude and provides multiple daily measurements.
 
-As mentioned above we use the stations locations to generate a voronoi tesselation
-covering germany and assign each resulting cell the meassurement from the associated
+As mentioned above we use the stations locations to generate a voronoi tessellation
+covering Germany and assign each resulting cell the measurement from the associated
 station. To get values for districts or states, we are calculating a weighted mean
 based on the area a voronoi cell is contributing. Since this operation is costly
 we did apply some optimisations as described in section \ref{subsec:opticontrib}.
 
 The tool used to download and import DWD data is based on work of a fellow student
-working on the same topic (cf. \autocite{website:cholin}). Its usage is described in section \ref{import-dwd-data}.
+working on the same topic (cf. \cite{website:cholin}). Its usage is described in section \ref{import-dwd-data}.
 
 
 \subsection{Global Forecast System (GFS)}
@@ -173,18 +172,18 @@ by the National Oceanic and Atmospheric Administration (NOAA) of the United Stat
 
 The GFS model is calculated every 6h hours and covers the entire globe at a resolution
 of 28 kilometers for weather predictions within 16 days. Furthermore it provides
-forecast up to two weeks with a lower resolution of 70 kilometers.
+forecast up to two weeks with a lower resolution of 70 kilometres.
 
 
 The data is free is free of charge an can be downloaded as Gridded Binaries (GRIB)
 from the NOAA servers. They provide among other access methods like FTP services,
-a simple \href{http://nomads.ncep.noaa.gov/txt_descriptions/grib_filter_doc.shtml}{webinterface}
+a simple \href{http://nomads.ncep.noaa.gov/txt_descriptions/grib_filter_doc.shtml}{webinterface}\footnote{http://nomads.ncep.noaa.gov/txt\_descriptions/grib\_filter\_doc.shtml}
 to extract certain levels and variables for a subregion.
 
 
 Because we are only interested in the temperature and rainfall forecasts for
 Germany, we are using that interface to download the GRIB data. Because the
-webinterface does not allow to download data older than one month, we provide
+web-interface does not allow to download data older than one month, we provide
 separate download and import scripts as described in section \ref{download-and-import-noaa-gfs-data-forecasts}
 that can be run periodically.
 
@@ -222,7 +221,7 @@ for Germany from Geofabrik and import them with imposm as described in section \
   ContribDistrict : \{{[}\uline{\dashuline{district\_id: biginteger}, \dashuline{station\_id: integer}}, area: double{]}\}
 
   ~\\
-  The relational schema is following \textcite{Kemper2011}. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas.
+  The relational schema is following \cite{Kemper2011}. The schema is not identical to the schema used in the actual PostgreSQL DB where for example additional fields used solely for the import are still remaining. The presented schema is given for illustrating conceptual ideas.
 
   ~\\
   As can be seen in the relational schema there are no foreign keys or junction tables
@@ -231,10 +230,6 @@ for Germany from Geofabrik and import them with imposm as described in section \
   spatial joins provided by the PostGIS extension.
 
 
-
-
-
-\newpage
 \section{Architecture}
 The architecture as shown in fig. \ref{fig:architecture} consist of 4 major parts:\\
 The data sources and their corresponding downloaders and importers, the PostGIS-Server, running in a virtual machine, the backend and a webapp. In the following four subsections \ref{subsec:dsai} to \ref{subsec:webapp} it will be  explained how those components work together and what parts they are made of as well as which technologies have been used to implement them.
@@ -246,9 +241,9 @@ The data sources and their corresponding downloaders and importers, the PostGIS-
 \todo[inline]{Schreibfehler korrigieren}
 
 \subsection{Data Sources and Importer}\label{subsec:dsai}
-The three data-sources used in this project are \todo[inline]{add 3 sources} and have been discussed in section \ref{sec:datasources} very detailed. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
+The three data-sources Deutscher Wetterdienst \footnote{http://www.dwd.de/}, Global Forecast System \footnote{http://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs} and OpenStreetMap \footnote{http://www.openstreetmap.org/} have been used in this project and were discussed in section \ref{sec:datasources}. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
 \subsection{Database Server}
-The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGis along with other required packages and configures most of the things needed for the server to be used.
+The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the set-up of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs Postgres and PostGis along with other required packages and configures most of the things needed for the server to be used.
 \subsection{Backend}
 The backend runs Flask, a model-view-controller-based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend.
 \subsection{Webapp (Frontend)}\label{subsec:webapp}
@@ -270,9 +265,9 @@ When profiling the application further, we noticed that the huge amount of detai
 
 Initially, after the import from Open Street Maps, all the country, state and district geometry columns had a combined size of 38 MiB. In an attempt to further improve performance we wanted to simplify the geometries, especially as they were only used for querying and overlaying the respective regions, not for the rendering of the map itself.
 
-The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. Postgis provides the function \lstinline{ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, \lstinline{ST_SimplifyPreserveTopology} doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
+The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. PostGIS provides the function \lstinline{ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, \lstinline{ST_SimplifyPreserveTopology} doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
 
-The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from \textcite{website:strks-blog}. The complete Script can be found in the Apendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
+The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from \cite{website:strks-blog}. The complete Script can be found in the Appendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
 
 \begin{figure}[htbp]
 	\centering
@@ -326,8 +321,8 @@ Instead of rendering the base tiles ourselves, we are using the freely
 available
 \todo[inline]{Sources}
 \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile
-Server} and tiles generated for free by
-\href{https://www.mapbox.com/}{Mapbox}. The desired basetile layer can
+Server} \footnote{http://wiki.openstreetmap.org/wiki/Tile\_usage\_policy} and tiles generated for free by
+\href{https://www.mapbox.com/}{Mapbox} \footnote{https://www.mapbox.com/}. The desired basetile layer can
 be selected as seen in fig. \ref{fig:layer-selection}.
 The map can also be panned and zoomed by using a pointing device
 (e.g. mouse).
@@ -369,7 +364,7 @@ selection did change, the weather control is loading the matching data
 from the backend via a JSON interface and displays the raster on the
 map.
 
-The cells are colored according to selected data and a legend is shown
+The cells are coloured according to selected data and a legend is shown
 on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref{fig:rainfall-legend})
 
 \begin{figure}[htbp]
@@ -535,7 +530,7 @@ The importer is a adopted version from \textcite{website:cholin} . Per default, 
 observations}. Details on the importer from \textcite{website:cholin}:
 
 \begin{quote}
-The importer downloads the station summary file to get a list of all weather stations. After that it downloads for each station the corresponding zip file (with measurement data), extracts it in-memory and parses it. To get information about which weather station is the nearest for a given point, it also calculates a region polygon for each station. This is done by computing the voronoi diagram for all stations. The resulting regions may be outside of the country germany. To avoid this there is a polygon of the border of germany (data is from naturalearthdata.com - country extraction and exportation as geojson with qgis). For each region we calculate the intersection with this polygon and use the result as final region (Multi)Polygon.
+The importer downloads the station summary file to get a list of all weather stations. After that it downloads for each station the corresponding zip file (with measurement data), extracts it in-memory and parses it. To get information about which weather station is the nearest for a given point, it also calculates a region polygon for each station. This is done by computing the voronoi diagram for all stations. The resulting regions may be outside of the country germany. To avoid this there is a polygon of the border of Germany (data is from naturalearthdata.com - country extraction and exportation as geojson with qgis). For each region we calculate the intersection with this polygon and use the result as final region (Multi)Polygon.
 \end{quote}
 
 \subsubsection*{Usage}\label{usage-1}
@@ -568,7 +563,7 @@ Import the intermediate result from \texttt{data/weather.json}:
 
 Importing the Forecast Data is done in two steps. First you have to
 download the GRIB files from the NOAA FTP servers. Then you have to
-import them as Postgis Raster.
+import them as PostGIS Raster.
 
 \subsubsection*{Download}\label{download}
 
