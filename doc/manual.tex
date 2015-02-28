@@ -243,7 +243,7 @@ The data sources and their corresponding downloaders and importers, the PostGIS-
 \subsection{Data Sources and Importer}\label{subsec:dsai}
 The three data-sources Deutscher Wetterdienst \footnote{http://www.dwd.de/}, Global Forecast System \footnote{http://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs} and OpenStreetMap \footnote{http://www.openstreetmap.org/} have been used in this project and were discussed in section \ref{sec:datasources}. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
 \subsection{Database Server}
-The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs Postgres and PostGis along with other required packages and configures most of the things needed for the server to be used.
+The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGIS along with other required packages and configures most of the things needed for the server to be used.
 \subsection{Backend}
 The backend runs Flask, a model-view-controller-based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend.
 \subsection{Webapp (Frontend)}\label{subsec:webapp}
@@ -464,7 +464,7 @@ conda create -n spatial-weather --file requirements.conda
 \end{lstlisting}
 
 The virtual environment can be activated by executing the following command.
-Remember that the environment has to be active to start the server succesfully.
+Remember that the environment has to be active to start the server successfully.
 \begin{lstlisting}
 source activate spatial-weather
 \end{lstlisting}
@@ -476,7 +476,7 @@ is handled by pip and can be called with the following command.
 pip install -r requirements.txt
 \end{lstlisting}
 
-The weather app requires a databse with the postgis and postgis\_topology extensions enabled.
+The weather app requires a database with the PostGIS and \texttt{postgis\_topology} extensions enabled.
 The following command can be used to create the default database with the required
 access levels within the previously provisioned virtual machine.
 \begin{lstlisting}[breaklines=true]
