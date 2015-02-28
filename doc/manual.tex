@@ -129,14 +129,14 @@
 \setcounter{page}{1}
 
 \section{Introduction}
-	\subsection{Topic}
+	\subsection*{Topic}
 	The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS.
-	\subsection{Motivation}
+	\subsection*{Motivation}
 	The motivation of this project can be seen from an educational as well as from a technical point of view.\\
 	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.\\
 %	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
 % zu Anti-Uni, das findet Voisard nicht gut
-	\subsection{Goal}
+	\subsection*{Goal}
 	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
 
 \newpage
@@ -238,7 +238,6 @@ The data sources and their corresponding downloaders and importers, the PostGIS-
 \caption{Architecture}
 \label{fig:architecture}
 \end{figure}
-\todo[inline]{Schreibfehler korrigieren}
 
 \subsection{Data Sources and Importer}\label{subsec:dsai}
 The three data-sources Deutscher Wetterdienst \footnote{http://www.dwd.de/}, Global Forecast System \footnote{http://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs} and OpenStreetMap \footnote{http://www.openstreetmap.org/} have been used in this project and were discussed in section \ref{sec:datasources}. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
