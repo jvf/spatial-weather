@@ -130,14 +130,17 @@
 
 \section{Introduction}
 	\subsection*{Topic}
-	The topic of this project is to combine OSM-data provided by Open Street Maps and weather-Data on a spatial database server running PostGIS.
+	The topic of this project is to combine map data provided by Open Street Maps and weather data on a spatial database server running PostGIS.
 	\subsection*{Motivation}
 	The motivation of this project can be seen from an educational as well as from a technical point of view.\\
-	The educational purpose of this project is to encourage the students to acquire domain-knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather-data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.\\
-%	Once these domain-related problems are understood the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
-% zu Anti-Uni, das findet Voisard nicht gut
+	The educational purpose of this project is to encourage the students to acquire domain knowledge concerning the problem that needs to solved with a system that is requested to be set up. In this particular case the domain is weather data. By working hands-on with real data the students expand their range of skills in order to be able to work with problems that exceed the boundary of purely computational and mathematical problems. 
+	
+	% zu Anti-Uni, das findet Voisard nicht gut
+	%This focuses on an important trade every programmer will need once he leaves university and has to deal with real world problems.\\
+	Once these domain related problems are understood, the students face the technological challenges in order to find a solution to the given problem which will be explained in the following subsection.
+
 	\subsection*{Goal}
-	The Goal is to find suitable sources for weather-forecast and historical weather-data as well as storing it on a PostGIS-server. In the end the system shall be able to overlay the OSM- and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
+	The goal is to find suitable sources for weather forecast and historical weather data as well as storing it on a PostGIS server. In the end the system shall be able to overlay the map and the collected weather data. In order to achieve this goal several technical problems have to be solved, like designing a data model, a suitable system architecture as well as setting up and configuring the whole system.
 
 \newpage
 \section{Data Sources}\label{sec:datasources}
@@ -240,11 +243,11 @@ The data sources and their corresponding downloaders and importers, the PostGIS-
 \end{figure}
 
 \subsection{Data Sources and Importer}\label{subsec:dsai}
-The three data-sources Deutscher Wetterdienst \footnote{http://www.dwd.de/}, Global Forecast System \footnote{http://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs} and OpenStreetMap \footnote{http://www.openstreetmap.org/} have been used in this project and were discussed in section \ref{sec:datasources}. The importers write the collected data directly to the spatial database server so they can be used to answer the queries by the backend. For further information on this part please refer to section \ref{sec:datasources} and the setup-guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
+The three data-sources Deutscher Wetterdienst \footnote{http://www.dwd.de/}, Global Forecast System \footnote{http://www.ncdc.noaa.gov/data-access/model-data/model-datasets/global-forcast-system-gfs} and OpenStreetMap \footnote{http://www.openstreetmap.org/} have been used in this project and were discussed in section \ref{sec:datasources}. The importers write the collected data directly to the spatial database server so they can be used to answer the queries. For further information on this part please refer to section \ref{sec:datasources} and the setup guide at subsections \ref{import-osm-data} to \ref{download-and-import-noaa-gfs-data-forecasts}
 \subsection{Database Server}
 The database server is provided as Vagrant virtual machine. Vagrant is a tool to automate the setup of virtual machines. In this case vagrant initializes a Ubuntu x64 instance and installs postgres and PostGIS along with other required packages and configures most of the things needed for the server to be used.
 \subsection{Backend}
-The backend runs Flask, a model-view-controller-based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend.
+The backend runs Flask, a model-view-controller based web framework. This framework contains methods to invoke data collection and data import as well as an ORM based on SQLAlchemy and GEOAlchemy to send queries to the database to retrieve data requested by the user via the frontend. The queries are written in python, the ORM translates those queries to SQL and the the response from the database is converted to GeoJSON, which is then forwarded to the frontend.
 \subsection{Webapp (Frontend)}\label{subsec:webapp}
 The frontend in implemented as a webapp written in HTML5, CSS3 and Javascript and provides a user interface which is described in detail in section \ref{usage}. To display the weather and OSM data the library Leaflet is used. The frontend receives the requested data from the backend in (Geo)JSON.
 
@@ -267,7 +270,7 @@ Initially, after the import from Open Street Maps, all the country, state and di
 
 The main problem here is that the simplification needs to preserve the topological relationships between the different polygons. PostGIS provides the function \lstinline{ST_Simplify}, but this function works on an object-by-object basis. Using this to simplify the borders produces holes and overlaps between the borders. Although the name seems to indicate otherwise, \lstinline{ST_SimplifyPreserveTopology} doesn't solve the problem (it only tries to preserve topologic relationships of multilines and multipolygons).
 
-The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from \cite{website:strks-blog}. The complete Script can be found in the Appendix. Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, on the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
+The way to achieve simplification and preserve topological relationships is to use the topology feature of Postgis. This means to create a topology, add a layer for the borders, populate the topology from the polygons, simplify the borders within the topology and convert the borders back to polygons. This method was adapted from \cite{website:strks-blog}. The complete Script can be found in the Appendix (section \ref{simplifycation_script}). Figure \ref{borders_full}, \ref{borders_simple}, \ref{germany_full} and \ref{germany_simple} compare the effects of the simplification. We aimed at achieving meaningful reduction in size but still maintain the basic characteristics of the borders. As one can see at fig. \ref{borders_full} and \ref{borders_simple}, at the smallest level the differences in detail are clearly notable. When looking at a larger zoom level, as in fig. \ref{germany_full} and \ref{germany_simple}, one can hardly spot the difference. To total combined size of the geometry columns after the simplification was 895 KiB! A further optimisation could be to provide different levels of detail for different zoom levels.
 
 \begin{figure}[htbp]
 	\centering
@@ -322,7 +325,7 @@ Chromium. Other browsers are not officially supported.
 
 By default Leaflet is using a zoom and a layer selection control.
 Instead of rendering the base tiles ourselves, we are using the freely
-available \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile Server} \footnote{http://wiki.openstreetmap.org/wiki/Tile\_usage\_policy} and tiles generated for free by
+available \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile Server} \footnote{http://wiki.openstreetmap.org/wiki/Tile\_usage\_policy} and tiles generated by
 \href{https://www.mapbox.com/}{Mapbox} \footnote{https://www.mapbox.com/}. The desired basetile layer can be selected as seen in fig. \ref{fig:layer-selection}.
 The map can also be panned and zoomed by using a pointing device
 (e.g. mouse).
@@ -407,7 +410,7 @@ For future development it would be great to add features that allow a comparison
 
 In this section we're discussing the lessons learned during this project.
 \begin{itemize}
-\item Bringing together different data-sources in one data base -- especially if they include spatial references -- can be quite a challenge and one has to consider more aspects than it seems right from the start. This is not only a technical problem, but one need to understand the underlying meaning of the data and the format it's stored in, to put the data together in one database in display it accordingly. Without this knowledge about the data, it would have not been possible to display it in a meaningful way.
+\item Bringing together different data-sources in one data base -- especially if they include spatial references -- can be quite a challenge and one has to consider more aspects than it seems right from the start. This is not only a technical problem, but one need to understand the underlying meaning of the data and the format it's stored in, to put the data together in one database and display it accordingly. Without this knowledge about the data, it would have not been possible to display it in a meaningful way.
 \item Creating a suitable data model at an early stage is as important as it is difficult, as long as one has very little knowledge about the data to be processed. By creating this data one develops a better understanding of the information to be delivered to the user. Even if the final technical representation might differ from the early concept, it helps keeping track of goals we want to achieve.
 \item Virtual Machines, especially when set up with Vagrant or other provisioning-tools, help a lot with allowing other programmers to easily reproduce the steps of the setup-process. The work put in an automated setup-routine can drastically reduce the complexity of a setup-guide, as many steps are bundled into one and therefore the provisioning-scripts act as documentation themselves. These scripts can then be examined for a deeper understanding, while still allowing to just use them, if the reader simply wishes for a working system, without going through all the pain of the manual setup.
 \item When dealing with spatial databases a lot can go wrong, if you don't know what you're doing. Once we got to the point where we had it up and running, we realized how slow queries on bigger data-sets are and discovered the power of system- and query optimization we're discussing in section \ref{sec:optimisation}.
@@ -425,19 +428,18 @@ The Following Packages or Programs need to be installed before you proceed with 
 sudo apt-get install gdal-bin postgis git vagrant python3 python3-dev python3-psycopg2 libpq-dev
 \end{lstlisting}
 
-It is strongly advised to install scipy, numpy and shapely (globaly) as
-binary packages and not through virtualenv, because of their large
-number of non-python dependencies. E.g. on Debian/Ubuntu systems use
-\begin{lstlisting}
-sudo apt-get install python3-numpy python3-scipy python3-shapely
-\end{lstlisting}
-to install. Make sure access to the global packages is activated in the
-virtual environment.
-
-When compiling entirely from source, You also might need to install the
-following libraries: (for shapely): libgeos-dev; (for scipy):
-libblas-dev, liblapack-dev, gfortran.
-
+% das ist alles nur relevant wenn man ohne conda installiert
+% It is strongly advised to install scipy, numpy and shapely (globaly) as binary packages and not through virtualenv, because of their large number of non-python dependencies. E.g. on Debian/Ubuntu systems use
+%\begin{lstlisting}
+%sudo apt-get install python3-numpy python3-scipy python3-shapely
+%\end{lstlisting}
+%to install. Make sure access to the global packages is activated in the
+%virtual environment.
+%
+%When compiling entirely from source, You also might need to install the
+%following libraries: (for shapely): libgeos-dev; (for scipy):
+%libblas-dev, liblapack-dev, gfortran.
+%
 \subsection{Step-by-step Setup}
 Switch to directory that should later contain your project-source-code and clone Repository by typing into console:
 \begin{lstlisting}
@@ -750,7 +752,7 @@ ImportError: dlopen(...lib/python3.4/site-packages/psycopg2/_psycopg.so, 2): Lib
 \end{lstlisting}
 
 This can be solved by changing the dynamic shared library install names
-in the \texttt{psycopq} binary. First, find out the version
+in the \texttt{psycopq} binary (cf. \cite{website:superuser}). First, find out the version
 \texttt{psycopq} is using:
 
 \begin{lstlisting}[breaklines=true]
@@ -786,8 +788,6 @@ $ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycop
 
 It is strongly recommended to do all this in an virtual environment to
 not mess up your system!
-
-Source: \cite{website:superuser}.
 
 \newpage
 \printbibliography
