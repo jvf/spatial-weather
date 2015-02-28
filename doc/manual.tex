@@ -318,12 +318,8 @@ Chromium. Other browsers are not officially supported.
 
 By default Leaflet is using a zoom and a layer selection control.
 Instead of rendering the base tiles ourselves, we are using the freely
-available
-\todo[inline]{Sources}
-\href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile
-Server} \footnote{http://wiki.openstreetmap.org/wiki/Tile\_usage\_policy} and tiles generated for free by
-\href{https://www.mapbox.com/}{Mapbox} \footnote{https://www.mapbox.com/}. The desired basetile layer can
-be selected as seen in fig. \ref{fig:layer-selection}.
+available \href{http://wiki.openstreetmap.org/wiki/Tile_usage_policy}{OSM Tile Server} \footnote{http://wiki.openstreetmap.org/wiki/Tile\_usage\_policy} and tiles generated for free by
+\href{https://www.mapbox.com/}{Mapbox} \footnote{https://www.mapbox.com/}. The desired basetile layer can be selected as seen in fig. \ref{fig:layer-selection}.
 The map can also be panned and zoomed by using a pointing device
 (e.g. mouse).
 
@@ -392,11 +388,12 @@ on the lower right for reference (see fig. \ref{fig:temperature-legend} and \ref
 Each cell is clickable and highlights it's border or, in case of the
 voronoi tessellation, the position of the weather station. Furthermore a
 pop-up as in fig. \ref{fig:popup} is shown, which provides additional data associated to the
-selected cell by calling the backends JSON interface.
+selected cell by calling the backend's JSON interface.
 
 Currently this is just the alphanumerical attributes, but could be used
 to show automatically generated temperature timelines or recent webcam
-photos. \todo[inline]{noch mehr ausblick kram\ldots}
+photos.
+For future development it would be great to add features that allow a comparison and evaluation of forecast- and historical data. This could be achieved, by overlaying the forecast-data with different offsets for a particular point in time with the historical data. The resulting graphical representation could then allow an evaluation of the correctness of forecasts.
 
 \begin{figure}[htbp]
 \centering
@@ -404,6 +401,8 @@ photos. \todo[inline]{noch mehr ausblick kram\ldots}
 \caption{Pop-up}
 \label{fig:popup}
 \end{figure}
+
+
 
 \section{Conclusion}
 
@@ -422,7 +421,7 @@ photos. \todo[inline]{noch mehr ausblick kram\ldots}
 \section{Setup Guide}
 \subsection{Prerequisites}
 
-This Setup-Guide has been writen for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
+This Setup-Guide has been written for and tested with Ubuntu 14.10 'Utopic Unicorn'.\\
 The Following Packages or Programs need to be installed before you proceed with this set-up-guide: Git, Vagrant, Python 3, PostGIS and the postgres database drive for Python.
 
 \begin{lstlisting}
@@ -490,7 +489,7 @@ vagrant ssh -c "sudo -u postgres psql -d spatial -c \"GRANT ALL ON DATABASE spat
 
 \subsection{Import OSM Data}\label{import-osm-data}
 
-Imports the OSM data for Germany. The following tables are created: Country, State, District and Cities. The data is imported from \texttt{germany-latest.osm.pbf}, which can be obtained from \href{http://download.geofabrik.de/europe/germany-latest.osm.pbf}{Geofabrik}. The pbf file needs to be placed in \texttt{data/} located in your Project-Folder.
+Imports the OSM data for Germany. The following tables are created: Country, State, District and Cities. The data is imported from \texttt{germany-latest.osm.pbf}, which can be obtained from \href{http://download.geofabrik.de/europe/germany-latest.osm.pbf}{Geofabrik} \footnote{http://download.geofabrik.de/europe/germany-latest.osm.pbf}. The pbf file needs to be placed in \texttt{data/} located in your Project-Folder.
 
 The importer used is \texttt{imposm3}, which is included in the vagrant setup (and will be executed within the VM). The import uses a custom mapping, which is provided in \texttt{importer/mapping.json}. The import is conducted in two steps: First, the data is imported to the tables Osm\_Admin and Osm\_Places. Second the Country, State, District and Cities tables are created from these tables.
 
@@ -526,8 +525,8 @@ All the above steps can be invoked separately.
 \subsection{Import DWD Data (Historical Weather Data)}\label{import-dwd-data}
 
 Imports weather observation data from the DWD (Deutscher Wetterdienst).
-The importer is a adopted version from \textcite{website:cholin} . Per default, it downloads all the \href{ftp://ftp.dwd.de/pub/CDC/observations_germany/climate/daily/kl}{recent daily
-observations}. Details on the importer from \textcite{website:cholin}:
+The importer is a adopted version from \cite{website:cholin} . Per default, it downloads all the \href{ftp://ftp.dwd.de/pub/CDC/observations_germany/climate/daily/kl}{recent daily
+observations} \footnote{ftp://ftp.dwd.de/pub/CDC/observations\_germany/climate/daily/kl}. Details on the importer from \cite{website:cholin}:
 
 \begin{quote}
 The importer downloads the station summary file to get a list of all weather stations. After that it downloads for each station the corresponding zip file (with measurement data), extracts it in-memory and parses it. To get information about which weather station is the nearest for a given point, it also calculates a region polygon for each station. This is done by computing the voronoi diagram for all stations. The resulting regions may be outside of the country germany. To avoid this there is a polygon of the border of Germany (data is from naturalearthdata.com - country extraction and exportation as geojson with qgis). For each region we calculate the intersection with this polygon and use the result as final region (Multi)Polygon.
@@ -636,7 +635,7 @@ Then you can run the Webserver:
 
 \subsection{Link to Repository}
 
-All the source code can be found at \href{https://github.com/jvf/spatial-weather}{Github}.
+All the source code can be found at \href{https://github.com/jvf/spatial-weather}{Github} \footnote{https://github.com/jvf/spatial-weather}.
 
 \subsection{Border Simplification Script}{\label{simplifycation_script}
 
@@ -790,7 +789,7 @@ $ /Users/jvf/miniconda3/envs/env-sw/lib/python3.4/site-packages/psycopg2/_psycop
 It is strongly recommended to do all this in an virtual environment to
 not mess up your system!
 
-Source: \textcite{website:superuser}.
+Source: \cite{website:superuser}.
 
 
 \end{document}
